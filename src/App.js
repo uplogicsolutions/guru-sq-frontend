@@ -6,6 +6,7 @@ import FormLayoutRoute from "layouts/FormLayout";
 import BasicLayoutRoute from "layouts/BasicLayout";
 import { routes as formRoutes } from 'routes/formLayoutRoutes';
 import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
+import 'rsuite/lib/styles/index.less';
 
 class App extends Component {
   render() {
