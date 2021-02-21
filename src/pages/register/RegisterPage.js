@@ -5,8 +5,8 @@ const RegisterPage = () => {
 
     const handleOnChange = (value, event) => {
         const name = event.target.name;
-        const value = value;
-        console.log(name, value)
+        const val = value;
+        
     } 
 
     const handleSubmit =  (e) => {
