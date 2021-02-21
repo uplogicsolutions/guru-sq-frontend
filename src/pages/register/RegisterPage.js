@@ -6,8 +6,7 @@ const RegisterPage = () => {
     const handleOnChange = (value, event) => {
         const name = event.target.name;
         const val = value;
-        
-    } 
+    }
 
     const handleSubmit =  (e) => {
         e.preventDefault()

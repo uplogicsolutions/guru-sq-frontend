@@ -1,5 +1,6 @@
 import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
+import PersonalDetails from 'pages/register/PersonalDetails';
 
 export const routes = [
     {
@@ -10,5 +11,9 @@ export const routes = [
     {
         path: '/register',
         component: RegisterPage
+    },
+    {
+        path: '/personal-details',
+        component: PersonalDetails
     }
 ]
