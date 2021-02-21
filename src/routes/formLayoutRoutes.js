@@ -1,14 +1,14 @@
-import UserPage from 'pages/UserPage';
-import LoginPage from 'pages/LoginPage';
+import LoginPage from 'pages/login/LoginPage';
+import RegisterPage from 'pages/register/RegisterPage';
 
 export const routes = [
     {
-        path: '/login1',
+        path: '/login',
         component: LoginPage
 
     },
     {
-        path: '/home1',
-        component: UserPage
+        path: '/register',
+        component: RegisterPage
     }
 ]

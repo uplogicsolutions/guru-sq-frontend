@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 const BasicLayout = ({ children, ...rest }) => {
     return (
         <div>
-            <div >This is the Second Layout</div>
+            <div >This is the Basic Layout</div>
             <div >{children}</div>
         </div>
     )

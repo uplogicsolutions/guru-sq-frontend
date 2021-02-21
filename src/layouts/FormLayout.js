@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 
 const FormLayout = ({ children }) => (
     <div>
-        <p>This is the First Layout</p>
+        <p>This is the Form Layout</p>
         {children}
     </div>
 );
