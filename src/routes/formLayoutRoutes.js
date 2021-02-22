@@ -1,6 +1,7 @@
 import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
 import PersonalDetails from 'pages/register/PersonalDetails';
+import SchoolTeacher from 'pages/register/SchoolTeacher';
 
 export const routes = [
     {
@@ -15,5 +16,9 @@ export const routes = [
     {
         path: '/personal-details',
         component: PersonalDetails
+    },
+    {
+        path: '/school-teacher',
+        component: SchoolTeacher
     }
 ]
