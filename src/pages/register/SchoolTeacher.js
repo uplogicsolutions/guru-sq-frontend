@@ -25,14 +25,20 @@ const SchoolTeacher = (props) => {
     }
 
     const handleSubmit = () => {
+
+        //TODO make 2 api calls one for personal detail table - data
+        //Second for school details table - data1
         const data = {
-            teacher_type,
+            teacher_type
+        }
+
+        const data1 = {
             school_type,
             board_of_education,
             medium_of_language,
             teaching_license,
         }
-        console.log(data)
+        console.log(data, data1)
     }
     const school_type_data = [
         {
