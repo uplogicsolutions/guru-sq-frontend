@@ -2,6 +2,7 @@ import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
 import PersonalDetails from 'pages/register/PersonalDetails';
 import SchoolTeacher from 'pages/register/SchoolTeacher';
+import SubjectSelection from 'pages/register/SubjectSelection';
 
 export const routes = [
     {
@@ -20,5 +21,9 @@ export const routes = [
     {
         path: '/school-teacher',
         component: SchoolTeacher
+    },
+    {
+        path: '/subjects',
+        component: SubjectSelection
     }
 ]
