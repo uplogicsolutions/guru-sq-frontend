@@ -4,6 +4,7 @@ import PersonalDetails from 'pages/register/PersonalDetails';
 import SchoolTeacher from 'pages/register/SchoolTeacher';
 import SubjectSelection from 'pages/register/SubjectSelection';
 import EducationalDetails from 'pages/register/EducationalDetails';
+import JobDetails from 'pages/register/JobDetails';
 
 export const routes = [
     {
@@ -28,7 +29,11 @@ export const routes = [
         component: SubjectSelection
     },
     {
-        path: '/educational_details',
+        path: '/educational-details',
         component: EducationalDetails,
+    },
+    {
+        path: '/job-details',
+        component: JobDetails
     }
 ]
