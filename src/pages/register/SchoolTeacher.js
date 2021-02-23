@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon } from 'rsuite';
+import { Panel, Row, Col, Form, InputPicker, Button } from 'rsuite';
 
 const SchoolTeacher = (props) => {
     const [isSchoolTeacher, setIsSchoolTeacher] = useState(undefined);

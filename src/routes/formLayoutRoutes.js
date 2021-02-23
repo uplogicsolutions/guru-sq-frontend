@@ -3,6 +3,7 @@ import RegisterPage from 'pages/register/RegisterPage';
 import PersonalDetails from 'pages/register/PersonalDetails';
 import SchoolTeacher from 'pages/register/SchoolTeacher';
 import SubjectSelection from 'pages/register/SubjectSelection';
+import EducationalDetails from 'pages/register/EducationalDetails';
 
 export const routes = [
     {
@@ -25,5 +26,9 @@ export const routes = [
     {
         path: '/subjects',
         component: SubjectSelection
+    },
+    {
+        path: '/educational_details',
+        component: EducationalDetails,
     }
 ]
