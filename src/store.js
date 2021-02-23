@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
+import login from 'pages/login/store/loginSlice'
 
-import auth from 'auth/Auth';
 
 const reducer = combineReducers({
-  auth
+  login
 })
 
 const store = configureStore({

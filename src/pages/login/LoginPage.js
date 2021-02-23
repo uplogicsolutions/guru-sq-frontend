@@ -1,43 +1,68 @@
 import react, { useState } from 'react'
+import { Button, Form, FormControl, FormGroup, Panel, Loader } from 'rsuite'
+import { loginFail, loginPending, loginSuccess } from './store'
+import { login } from 'api/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import { login, logout } from 'auth/Auth'
-import { Button, Form, FormControl, FormGroup, FormControlLabel, FormHelpText, Panel } from 'rsuite';
 
-
-const LoginPage = () => {
+const LoginPage = (props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+
     const dispatch = useDispatch()
-    const { user } = useSelector(state => state.auth)
-    if (user) {
-        return (
-            <div>
-                Hi, {user.username}!
-                <button onClick={() => dispatch(logout())}>Logout</button>
-            </div>
-        )
+    const { isLoading, isAuth, error } = useSelector(state => state.login)
+
+    const handleOnChange = (value, event) => {
+        const name = event.target.name;
+        switch (name) {
+            case "username":
+                setUsername(value)
+                break
+            case "password":
+                setPassword(value)
+        }
     }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        dispatch(loginPending())
+        const response = await login({ username, password });
+        console.log(response)
+        if (response.type == 'success') {
+            dispatch(loginSuccess())
+        } else {
+            dispatch(loginFail(response.message))
+        }
+    }
+
+    if(isAuth) {
+        console.log('Login successful')
+        props.history.push('/register')
+    }
+
     return (
-        <Panel style={{background:'white'}} header={<h3>Login</h3>}shaded>
-            <Form fluid>
-                <FormGroup>
-                    <FormControl placeholder="Username" name="username" type="text" />
-                </FormGroup>
-                <FormGroup>
-                    <FormControl placeholder="Password" name="password" type="password" />
-                </FormGroup>
-                <Button block appearance="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        </Panel>
-        // <div>
-        //     <form>
-        //         <input type="text" name="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
-        //         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-        //         <Button appearance="primary" onClick={() => dispatch(login(username, password))}>Login</Button>
-        //     </form>
-        // </div>
+        isLoading
+            ?
+            <Loader size='md' center={true} />
+            :
+            <>
+                <Panel style={{ background: 'white' }} header={<h3>Login</h3>} shaded>
+                    <Form fluid>
+                        {
+                            error &&
+                            <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
+                        }
+                        <FormGroup>
+                            <FormControl placeholder="Username" name="username" onChange={handleOnChange} type="text" />
+                        </FormGroup>
+                        <FormGroup>
+                            <FormControl placeholder="Password" name="password" onChange={handleOnChange} type="password" />
+                        </FormGroup>
+                        <Button onClick={handleSubmit} block appearance="primary" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
+                </Panel>
+            </>
     );
 }
 
