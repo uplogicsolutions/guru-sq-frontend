@@ -1,42 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
-
-const authSlice = createSlice({
-  name: 'auth',
-  initialState: {
-    user: null,
-  },
-  reducers: {
-    loginSuccess: (state, action) => {
-      state.user = action.payload;
-      console.log(action.payload)
-    },
-    logoutSuccess: (state, action) =>  {
-      state.user = null;
-    },
-  },
-});
-
-export const login = ({ username, password }) => async dispatch => {
-  try {
-    let user = {
-      username: 'shubhangi@gmail.com'
+import { parseJwt, isJwtTokenValid } from 'utils/jwt'
+import store from 'store'
+class AuthService {
+    checkInitState() {
+        const token = localStorage.getItem('token');
+        if(token) {
+            const parsedJWT = parseJwt(token)
+            const valid = isJwtTokenValid(parsedJWT);
+            if(valid) {
+                //check user state
+            }            
+            return {
+                login: 'failure',
+                redirect: '/login'
+            }
+        }
+        return {
+            login: 'failure',
+            redirect: '/'
+        }
     }
-    dispatch(loginSuccess(user));
-  } catch (e) {
-    return console.error(e.message);
-  }
+
 }
 
-export const logout = () => async dispatch => {
-  try {
-    return dispatch(logoutSuccess())
-  } catch (e) {
-    return console.error(e.message);
-  }
-}
+const instance = new AuthService();
 
-const { loginSuccess, logoutSuccess } = authSlice.actions
-export default authSlice.reducer
-
-
+export default instance;
