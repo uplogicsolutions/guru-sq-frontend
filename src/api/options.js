@@ -6,11 +6,10 @@ export const getOptions = async (type) => {
         const token = localStorage.getItem('token');
         const config = {
             headers: {
-                ContentType: 'application/json',
-                authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             }
         }
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/options`, { type }, config);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/options?type=${type}`, config);
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.code == 400) {
