@@ -1,12 +1,18 @@
-import react, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Form, FormControl, FormGroup, Panel, Loader } from 'rsuite'
+import { Button, Form, FormGroup, Panel, Loader, Input, Alert } from 'rsuite'
 import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
-import { register } from 'api/auth'
+import { register } from 'api/auth';
+
+//Form Validation
+import { useForm, Controller } from "react-hook-form";
+
+//Custom Components
+import Danger from 'components/alerts/Danger';
 
 const RegisterPage = (props) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+
+    const { control, errors , handleSubmit } = useForm();
 
     const dispatch = useDispatch()
     const { loading, redirect, redirectUrl, error } = useSelector(state => state.register)
@@ -15,22 +21,24 @@ const RegisterPage = (props) => {
         dispatch(resetRegisterStates())
     },[])
 
-    const handleOnChange = (value, event) => {
-        const name = event.target.name;
-        switch (name) {
-            case 'username':
-                setUsername(value)
-                break
-            case 'password':
-                setPassword(value)
-        }
+    const isValidUsername = (username) => {
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const mobile_regex = /^([6-9][0-9]{9})$/
+        if(email_regex.test(username))
+            return true
+        else if(mobile_regex.test(username))
+            return true
+        return false
     }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    
+    const handleOnSubmit = async (data) => {
+        
+        console.log('User Data',data);
+        
         dispatch(registerPending())
-        let response = await register({username, password});
+        let response = await register(data);
         if(response.type == 'success') {
+            Alert.success('Yay! Registration Successfull')
             dispatch(registerSuccess('/personal-details'))
         } else {
             dispatch(registerFailure(response.message))
@@ -47,18 +55,51 @@ const RegisterPage = (props) => {
             <Loader size='md' center={true} />
             :
             <Panel style={{ background: 'white' }} header={<h3>Register</h3>} shaded>
-                <Form fluid>
+                <Form>
                     {
                         error &&
-                        <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
+                       <Danger>{error}</Danger>
                     }
                     <FormGroup>
-                        <FormControl onChange={handleOnChange} placeholder="Username" name="username" type="text" />
+                        <Controller
+                            name="username"
+                            control={control}
+                            defaultValue=""
+                            rules= {{
+                                required: true,
+                                validate: value => isValidUsername(value)
+                            }}
+                            render={({onChange, value}) => 
+                                <Input 
+                                    onChange={(text, e) => onChange(e)} 
+                                    value={value}
+                                    placeholder="Mobile or Email" 
+                                />
+                            }
+                        />
+                        {errors.username?.type === 'required' && <Danger>*This field is required</Danger>}
+                        {errors.username?.type === 'validate' && <Danger>*Please enter valid mobile or email</Danger>}
                     </FormGroup>
                     <FormGroup>
-                        <FormControl onChange={handleOnChange} placeholder="Password" name="password" type="password" />
+                        <Controller
+                            name="password"
+                            control={control}
+                            defaultValue=""
+                            rules= {{
+                                required: true,
+                                minLength: 8,
+                            }}
+                            render={({onChange, value}) => 
+                                <Input 
+                                    onChange={(text, e) => onChange(e)} 
+                                    value={value} 
+                                    placeholder="Password" 
+                                />}
+                            />
+                        {errors.password?.type === 'required' && <Danger>*This field is required</Danger>}
+                        {errors.password?.type === 'minLength' && <Danger>*Minimum 8 characters are reuired</Danger>}
                     </FormGroup>
-                    <Button onClick={handleSubmit} block appearance="primary" type="submit">
+                    <Button onClick={handleSubmit(handleOnSubmit)} block appearance="primary">
                         Submit
                 </Button>
                 </Form>
