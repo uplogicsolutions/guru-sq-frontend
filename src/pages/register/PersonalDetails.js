@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon } from 'rsuite';
+import { useDispatch, useSelector } from 'react-redux'
+import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
+import { registerPersonalDetails } from 'api/auth'
+import { getOptions } from 'api/options'
 
 
 const gender_data = [
@@ -25,7 +29,7 @@ const languages = [
         "label": "English",
         "value": "english",
         "role": "",
-        
+
     },
     {
         "label": "Hindi",
@@ -55,6 +59,15 @@ const PersonalDetails = (props) => {
     const [gender, setGender] = useState('')
     const [mother_tounge, setMotherTounge] = useState('')
     const [otherLanguagesFields, setOtherLanguagesFields] = useState([{ language: '', proficiency: '' }]);
+
+    const loadOptions = async () => {
+        let response = await getOptions('languages')
+        console.log(response)
+    }
+
+    useEffect(() => {
+        loadOptions();
+    }, [])
 
     const handleOnChange = (value, event) => {
         const name = event.target && event.target.name;
@@ -88,7 +101,7 @@ const PersonalDetails = (props) => {
         values.push({ language: '', proficiency: '' })
         setOtherLanguagesFields(values)
     }
-    
+
     const handleSubmit = () => {
         const data = {
             first_name,
