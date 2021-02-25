@@ -92,24 +92,24 @@ const JobDetails = (props) => {
                     </Row >
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="age_group" onSelect={(age_group) => setAgeGroup(age_group)} block placeholder="Age Group of Students" data={test} />
+                            <InputPicker block name="age_group" onSelect={(age_group) => setAgeGroup(age_group)}  placeholder="Age Group of Students" data={test} />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <TagPicker name="core_subjects" onSelect={(core_subjects) => setCoreSubjects(core_subjects)} block placeholder="Core Subjects" data={test} />
-                        </Col>
-                    </Row>
-                    
-                    <Row style={{ marginTop: 15 }}>
-                        <Col xs={24} sm={24} md={24}>
-                            <TagPicker name="supplementary_subjects" onSelect={(supplementary_subjects) => setSupplementarySubjects(supplementary_subjects)} block placeholder="Supplementary Subjects" data={test} />
+                            <TagPicker block  name="core_subjects" onSelect={(core_subjects) => setCoreSubjects(core_subjects)}  placeholder="Core Subjects" data={test} />
                         </Col>
                     </Row>
                     
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="employer_type" onSelect={(employer_type) => setEmployerType(employer_type)} block placeholder="Employer Type" data={test} />
+                            <TagPicker block name="supplementary_subjects" onSelect={(supplementary_subjects) => setSupplementarySubjects(supplementary_subjects)}  placeholder="Supplementary Subjects" data={test} />
+                        </Col>
+                    </Row>
+                    
+                    <Row style={{ marginTop: 15 }}>
+                        <Col xs={24} sm={24} md={24}>
+                            <InputPicker block name="employer_type" onSelect={(employer_type) => setEmployerType(employer_type)}  placeholder="Employer Type" data={test} />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15}} className="">
@@ -119,20 +119,20 @@ const JobDetails = (props) => {
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} md={12}>
-                            <InputNumber name="start_year" onChange={ text => setStartYear(text)} block placeholder="Start Year" />
+                            <InputNumber name="start_year" onChange={ text => setStartYear(text)}  placeholder="Start Year" />
                         </Col>
                         <Col xs={24} md={12}>
-                            <InputNumber name="end_year" onChange={text => setEndYear(text)} block placeholder="End Year" />
+                            <InputNumber name="end_year" onChange={text => setEndYear(text)}  placeholder="End Year" />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="form_of_contract" onSelect={(form) => setFormOfContract(form_of_contract)} block placeholder="Form of Contract" data={test} />
+                            <InputPicker block name="form_of_contract" onSelect={(form) => setFormOfContract(form_of_contract)}  placeholder="Form of Contract" data={test} />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15}} className="">
                         <Col xs={24} md={24}>
-                            <Input name="description" onChange={(text) => setDescription(text)} placeholder="Description" />
+                            <Input inputRef name="description" onChange={(text) => setDescription(text)} placeholder="Description" />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
@@ -157,7 +157,7 @@ const JobDetails = (props) => {
                             )
                         })}
                     </PanelGroup>
-                    <Button onClick={toggleForm} style={{marginTop: 10}} appearance="primary"> Add More</Button>
+                    <Button  onClick={toggleForm} style={{marginTop: 10}} appearance="primary"> Add More</Button>
                 </div>
 
             }

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { Panel, Row, Col, Form, InputPicker, Button, Input, Icon, IconButton, DatePicker, InputNumber, PanelGroup } from 'rsuite';
+import { Panel, Row, Col, Form, InputPicker, Button, Input, Icon, IconButton, DatePicker, InputNumber, PanelGroup, TagPicker } from 'rsuite';
+
+import { useForm, Controller } from "react-hook-form";
+
 
 const EducationalDetails = (props) => {
+
+    const { control, errors ,handleSubmit } = useForm();
+
 
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
@@ -47,6 +53,11 @@ const EducationalDetails = (props) => {
             "label": "Goverment",
             "value": "goverment",
             "role": ""
+        },
+        {
+            "label": "Semi",
+            "value": "semi",
+            "role": ""
         }
     ]
 
@@ -74,49 +85,105 @@ const EducationalDetails = (props) => {
         setShowForm(!show_form);
     }
 
+    const onSubmit = data => {
+        console.log(data);
+    }
+
     return (
         <Panel shaded style={{background:'white'}}>
             {show_form && 
-                <Form>
+                <Form onSubmit={handleSubmit(onSubmit)}>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} md={24}>
-                            <Input name="degree_name" onChange={(text, e) => setDegreeName(text)} placeholder="Degree Name" />
+                        <Controller
+                            name="degree_name"
+                            control={control}
+                            defaultValue=""
+                            render={({onChange, value}) => 
+                            <Input onChange={(text, e) => onChange(e)} value={value} placeholder="Degree Name" />}
+                        />
+                            
                         </Col>
                     </Row >
                     <Row style={{ marginTop: 15}} className="">
                     <Col xs={24} md={24}>
-                            <Input name="institute_name" onChange={(text, e) => setInstituteName(text)} placeholder="Name of Institute" />
+                        <Controller
+                                name="institute_name"
+                                control={control}
+                                defaultValue=""
+                                render={({onChange, value}) => 
+                                <Input onChange={(text, e) => onChange(e)} placeholder="Name of Institute" />}
+                            />
+                            
                         </Col>
-                    </Row>
+                    </Row> 
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} md={12}>
-                            <InputNumber name="start_year" onChange={ text => setStartYear(text)} block placeholder="Start Year" />
+                        <Controller
+                            name="start_year"
+                            control={control}
+                            defaultValue=""
+                            render={({onChange, value}) => 
+                                <InputNumber onChange={ (text,e) => onChange(e)} placeholder="Start Year" />}
+                        />
+                            
                         </Col>
                         <Col xs={24} md={12}>
-                            <InputNumber name="end_year" onChange={text => setEndYear(text)} block placeholder="End Year" />
+                        <Controller
+                            name="end_year"
+                            control={control}
+                            defaultValue=""
+                            render={({onChange, value}) => 
+                            <InputNumber onChange={(text, e) => onChange(e)} placeholder="End Year" />}
+                        />
+                            
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="passing_grade" onSelect={(grade) => setPassingGrade(grade)} block placeholder="Passing Grade" data={test} />
+                        <Controller
+                            name="passing_grade"
+                            control={control}
+                            defaultValue=""
+                            rules={{ required: true }}
+                            options={test}
+                            as={<InputPicker name="passing_grade" block placeholder="Passing Grade" data={test} />}
+                        />
+                        {errors.passing_grade && <p>This is required</p>}
+                        </Col>
+                    </Row>
+                     <Row style={{ marginTop: 15 }} className="show-grid">
+                        <Col xs={24} sm={24} md={24}>
+                        <Controller
+                            name="major_subject"
+                            control={control}
+                            rules={{ required: true, maxLength:2,max: 2 }}
+                            defaultValue=""
+                            options={test}
+                            as={<TagPicker name="major_subject"  block placeholder="Major Subject" data={test} />}
+                        />
+                        {errors.major_subject && <p>This is required</p>}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="major_subject" onSelect={subject => setMajorSubject(subject)} block placeholder="Major Subject" data={test} />
+                        <Controller
+                            name="minor_subject"
+                            control={control}
+                            defaultValue=""
+                            options={test}
+                            as={<TagPicker name="minor_subject" block placeholder="Minor Subject" data={test} />}
+                        />
+                            
                         </Col>
-                    </Row>
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} sm={24} md={24}>
-                            <InputPicker name="minor_subject" onSelect={subject => setMinorSubject(subject)} block placeholder="Minor Subject" data={test} />
-                        </Col>
-                    </Row>
+                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={12}>
                             <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
                         </Col>
                         <Col xs={24} sm={24} md={12}>
-                            <Button block onClick={handleAdd}  appearance="primary"> <b>Add</b> </Button>
+                            <Button type="submit" block onClick={handleSubmit(onSubmit)}  appearance="primary"> Submit </Button>
+                            {/* <Input className="rs-btn rs-btn-primary rs-btn-block" value="Submit" type="submit"/>  */}
                         </Col>
                     </Row>
                 </Form>
