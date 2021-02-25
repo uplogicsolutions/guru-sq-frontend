@@ -28,10 +28,8 @@ const RegisterPage = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(username, password)
         dispatch(registerPending())
         let response = await register({username, password});
-        console.log(response)
         if(response.type == 'success') {
             dispatch(registerSuccess('/personal-details'))
         } else {
