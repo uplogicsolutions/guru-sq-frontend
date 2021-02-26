@@ -32,9 +32,6 @@ const RegisterPage = (props) => {
     }
     
     const handleOnSubmit = async (data) => {
-        
-        console.log('User Data',data);
-        
         dispatch(registerPending())
         let response = await register(data);
         if(response.type == 'success') {
