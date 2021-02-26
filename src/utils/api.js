@@ -16,6 +16,7 @@ const successResponse = (data) => {
 }
 
 const failureResponse = (message='Something went wrong') => {
+    if(!!!message) message = 'Something went wrong'
     return {
         type: 'failure',
         message: message

@@ -12,7 +12,7 @@ const PersonalDetails = (props) => {
     const [dob, setDOB] = useState(null)
     const [gender, setGender] = useState('')
     const [mother_tongue, setMotherTongue] = useState('')
-    const [otherLanguagesFields, setOtherLanguagesFields] = useState([{ language: '', proficiency: '' }]);
+    const [otherLanguagesFields, setOtherLanguagesFields] = useState([{ language_id: '', proficiency: '' }]);
 
     const [languages, setLanguages] = useState([])
     const [gender_data, setGenderData] = useState([])
@@ -58,7 +58,7 @@ const PersonalDetails = (props) => {
 
     const handleLanguageChange = (index, label, e) => {
         const values = [...otherLanguagesFields];
-        values[index].language = label
+        values[index].language_id = label
 
         setOtherLanguagesFields(values)
     }
@@ -72,7 +72,7 @@ const PersonalDetails = (props) => {
 
     const handleAddButton = () => {
         const values = [...otherLanguagesFields]
-        values.push({ language: '', proficiency: '' })
+        values.push({ language_id: '', proficiency: '' })
         setOtherLanguagesFields(values)
     }
 
