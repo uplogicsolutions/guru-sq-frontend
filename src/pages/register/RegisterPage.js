@@ -33,7 +33,7 @@ const RegisterPage = (props) => {
     
     const handleOnSubmit = async (data) => {
         
-        console.log('User Data',data);
+        //console.log('User Data',data);
         
         dispatch(registerPending())
         let response = await register(data);
@@ -55,7 +55,7 @@ const RegisterPage = (props) => {
             <Loader size='md' center={true} />
             :
             <Panel style={{ background: 'white' }} header={<h3>Register</h3>} shaded>
-                <Form>
+                <Form onSubmit={handleSubmit(handleOnSubmit)}>
                     {
                         error &&
                        <Danger>{error}</Danger>
@@ -90,7 +90,8 @@ const RegisterPage = (props) => {
                                 minLength: 8,
                             }}
                             render={({onChange, value}) => 
-                                <Input 
+                                <Input
+                                    type="password" 
                                     onChange={(text, e) => onChange(e)} 
                                     value={value} 
                                     placeholder="Password" 
@@ -99,7 +100,7 @@ const RegisterPage = (props) => {
                         {errors.password?.type === 'required' && <Danger>*This field is required</Danger>}
                         {errors.password?.type === 'minLength' && <Danger>*Minimum 8 characters are reuired</Danger>}
                     </FormGroup>
-                    <Button onClick={handleSubmit(handleOnSubmit)} block appearance="primary">
+                    <Button type="submit" block appearance="primary">
                         Submit
                 </Button>
                 </Form>
