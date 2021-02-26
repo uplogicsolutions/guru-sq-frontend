@@ -6,7 +6,7 @@ export const login = async (data) => {
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
-            return failureResponse(error.response.data.message || '')
+            return failureResponse(error.response.data.message)
         }
     }
     return failureResponse()
@@ -21,7 +21,7 @@ export const register = async (data) => {
     } catch (error) {
         console.log(error.response)
         if (error.response && error.response.status == 400) {
-            return failureResponse(error.response.data.message || '')
+            return failureResponse(error.response.data.message)
         }
     }
     return failureResponse()
@@ -33,7 +33,7 @@ export const registerPersonalDetails = async (data) => {
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
-            return failureResponse(error.response.data.message || '')
+            return failureResponse(error.response.data.message)
         }
     }
     return failureResponse()
