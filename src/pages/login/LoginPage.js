@@ -54,7 +54,7 @@ const LoginPage = (props) => {
             :
             <>
                 <Panel style={{ background: 'white' }} header={<h3>Login</h3>} shaded>
-                    <Form fluid>
+                    <Form onSubmit={handleSubmit(handleOnSubmit)}>
                         {
                             error &&
                             <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
@@ -98,7 +98,7 @@ const LoginPage = (props) => {
                                 />
                             {errors.password?.type === 'required' && <Danger>*This field is required</Danger>}
                         </FormGroup>
-                        <Button onClick={handleSubmit(handleOnSubmit)} block appearance="primary" type="submit">
+                        <Button block appearance="primary" type="submit">
                             Submit
                         </Button>
                     </Form>
