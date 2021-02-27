@@ -89,6 +89,7 @@ const PersonalDetails = (props) => {
         dispatch(registerPending())
         let response = await registerPersonalDetails(data);
         if (response.type == 'success') {
+            Alert.success('Yay! Added details Successfully')
             dispatch(registerSuccess('/school-teacher'))
         } else {
             dispatch(registerFailure(response.message))
