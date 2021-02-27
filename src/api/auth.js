@@ -38,3 +38,15 @@ export const registerPersonalDetails = async (data) => {
     }
     return failureResponse()
 }
+
+export const registerSchoolDetails = async (data) => {
+    try {
+        const response = await api.post('/user/user-school-details', data);
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.status == 400) {
+            return failureResponse(error.response.data.message)
+        }
+    }
+    return failureResponse()
+}
