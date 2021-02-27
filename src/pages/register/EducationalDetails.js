@@ -1,73 +1,56 @@
-import React, { useState } from 'react';
-import { Panel, Row, Col, Form, InputPicker, Button, Input, Icon, IconButton, DatePicker, InputNumber, PanelGroup, TagPicker } from 'rsuite';
-
+import React, { useState, useEffect } from 'react';
+import { Panel, Row, Col, Form, InputPicker, Button, Input, InputNumber, PanelGroup, TagPicker, Loader, Alert } from 'rsuite';
+import { useDispatch, useSelector } from 'react-redux'
+import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
+import { registerEducationalDetails } from 'api/auth';
+import { getOptions } from 'api/options'
+import { parseArrayOfObject } from 'utils/parse';
 import { useForm, Controller } from "react-hook-form";
 
 
 const EducationalDetails = (props) => {
-
-    const { control, errors ,handleSubmit } = useForm();
-
+    const { control, errors, handleSubmit } = useForm();
 
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
     const [user_educations, setUserEducations] = useState([])
-    const [degree_name, setDegreeName] = useState('')
-    const [institute_name, setInstituteName] = useState('')
-    const [start_year, setStartYear] = useState('')
-    const [end_year, setEndYear] = useState('')
-    const [passing_grade, setPassingGrade] = useState('')
     const [major_subject, setMajorSubject] = useState([])
     const [minor_subject, setMinorSubject] = useState([])
 
+    const [current_degree_name, setCurrentDegreeName] = useState('')
+    const [current_institute_name, setCurrentInstituteName] = useState('')
+    const [current_start_year, setCurrentStartYear] = useState('')
+    const [current_end_year, setCurrentEndYear] = useState('')
+    const [current_passing_grade, setCurrentPassingGrade] = useState('')
 
-    //TODO fetch educations from server
-    let educations = [
-        {
-            degree_name: "Degree 1",
-            end_year: "4234",
-            institute_name: "dasdasd",
-            major_subject: "private",
-            minor_subject: "goverment",
-            passing_grade: "goverment",
-            start_year: "3424",
-        },
-        {
-            degree_name: "Degree 2",
-            end_year: "4234",
-            institute_name: "dasdasd",
-            major_subject: "private",
-            minor_subject: "goverment",
-            passing_grade: "goverment",
-            start_year: "3224",
-        }
-]
-    
-    const test = [
-        {
-            "label": "Private",
-            "value": "private",
-            "role": ""
-        },
-        {
-            "label": "Goverment",
-            "value": "goverment",
-            "role": ""
-        },
-        {
-            "label": "Semi",
-            "value": "semi",
-            "role": ""
-        }
-    ]
+    const [subjects, setSubjects] = useState([])
+    const [grades, setGrades] = useState([])
+
+    const dispatch = useDispatch()
+    const { loading, redirect, redirectUrl, error } = useSelector(state => state.register)
+
+    const parseSubject = [{ oldKey: 'subject_id', newKey: 'value' }, { oldKey: 'subject_name', newKey: 'label' }]
+    const parseGrade = [{ oldKey: 'option_id', newKey: 'value' }, { oldKey: 'label', newKey: 'label' }]
+
+    const loadOptions = async () => {
+        let subjectsData = await getOptions('subjects')
+        setSubjects(parseArrayOfObject(parseSubject, subjectsData.data.data))
+        let gradesData = await getOptions('passingGrades')
+        setGrades(parseArrayOfObject(parseGrade, gradesData.data.data))
+    }
+
+    useEffect(() => {
+        dispatch(resetRegisterStates())
+        loadOptions()
+    }, [])
 
     const handleAdd = () => {
         const data = {
-            degree_name,
-            institute_name,
-            start_year,
-            end_year,
-            passing_grade,
+            current_degree_name,
+            current_institute_name,
+            current_start_year,
+            current_end_year,
+            current_passing_grade,
             major_subject,
             minor_subject
         }
@@ -85,126 +68,158 @@ const EducationalDetails = (props) => {
         setShowForm(!show_form);
     }
 
-    const onSubmit = data => {
-        console.log(data);
+    const onSubmit = async data => {
+        let educations = [...user_educations]
+        educations.push({
+            degree_name: data.current_degree_name,
+            institute_name: data.current_institute_name,
+            start_year: data.current_start_year,
+            end_year: data.current_end_year,
+            passing_grade: data.current_passing_grade
+        })
+        let reqData = {
+            educations: educations,
+            major_subjects: data.major_subject,
+            minor_subjects: data.minor_subject
+        }
+        console.log(reqData)
+        dispatch(registerPending())
+        let response = await registerEducationalDetails(reqData);
+        if (response.type == 'success') {
+            Alert.success('Yay! Added educational details Successfully')
+            dispatch(registerSuccess('/job-details'))
+        } else {
+            dispatch(registerFailure(response.message))
+        }
+    }
+
+    if (redirect) {
+        props.history.push(redirectUrl);
     }
 
     return (
-        <Panel shaded style={{background:'white'}}>
-            {show_form && 
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} md={24}>
-                        <Controller
-                            name="degree_name"
-                            control={control}
-                            defaultValue=""
-                            render={({onChange, value}) => 
-                            <Input onChange={(text, e) => onChange(e)} value={value} placeholder="Degree Name" />}
-                        />
-                            
-                        </Col>
-                    </Row >
-                    <Row style={{ marginTop: 15}} className="">
-                    <Col xs={24} md={24}>
-                        <Controller
-                                name="institute_name"
-                                control={control}
-                                defaultValue=""
-                                render={({onChange, value}) => 
-                                <Input onChange={(text, e) => onChange(e)} placeholder="Name of Institute" />}
-                            />
-                            
-                        </Col>
-                    </Row> 
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} md={12}>
-                        <Controller
-                            name="start_year"
-                            control={control}
-                            defaultValue=""
-                            render={({onChange, value}) => 
-                                <InputNumber onChange={ (text,e) => onChange(e)} placeholder="Start Year" />}
-                        />
-                            
-                        </Col>
-                        <Col xs={24} md={12}>
-                        <Controller
-                            name="end_year"
-                            control={control}
-                            defaultValue=""
-                            render={({onChange, value}) => 
-                            <InputNumber onChange={(text, e) => onChange(e)} placeholder="End Year" />}
-                        />
-                            
-                        </Col>
-                    </Row>
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} sm={24} md={24}>
-                        <Controller
-                            name="passing_grade"
-                            control={control}
-                            defaultValue=""
-                            rules={{ required: true }}
-                            options={test}
-                            as={<InputPicker name="passing_grade" block placeholder="Passing Grade" data={test} />}
-                        />
-                        {errors.passing_grade && <p>This is required</p>}
-                        </Col>
-                    </Row>
-                     <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} sm={24} md={24}>
-                        <Controller
-                            name="major_subject"
-                            control={control}
-                            rules={{ required: true, maxLength:2,max: 2 }}
-                            defaultValue=""
-                            options={test}
-                            as={<TagPicker name="major_subject"  block placeholder="Major Subject" data={test} />}
-                        />
-                        {errors.major_subject && <p>This is required</p>}
-                        </Col>
-                    </Row>
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} sm={24} md={24}>
-                        <Controller
-                            name="minor_subject"
-                            control={control}
-                            defaultValue=""
-                            options={test}
-                            as={<TagPicker name="minor_subject" block placeholder="Minor Subject" data={test} />}
-                        />
-                            
-                        </Col>
-                     </Row>
-                    <Row style={{ marginTop: 15 }} className="show-grid">
-                        <Col xs={24} sm={24} md={12}>
-                            <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
-                        </Col>
-                        <Col xs={24} sm={24} md={12}>
-                            <Button type="submit" block onClick={handleSubmit(onSubmit)}  appearance="primary"> Submit </Button>
-                            {/* <Input className="rs-btn rs-btn-primary rs-btn-block" value="Submit" type="submit"/>  */}
-                        </Col>
-                    </Row>
-                </Form>
-            }
-            {show_accordian && educations && 
-                <div>
-                    <h4>Your Educations</h4>
-                    <PanelGroup style={{marginTop:10}} accordion bordered>
-                        {educations.map((education) => {
-                            return(
-                            <Panel header={education.degree_name}>
-                                <p>{education.start_year}</p>
-                            </Panel>
-                            )
-                        })}
-                    </PanelGroup>
-                    <Button onClick={toggleForm} style={{marginTop: 10}} appearance="primary"> Add More</Button>
-                </div>
+        loading
+            ?
+            <Loader size='md' center={true} />
+            :
+            <Panel shaded style={{ background: 'white' }}>
+                {show_form &&
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        {
+                            error &&
+                            <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
+                        }
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} md={24}>
+                                <Controller
+                                    name="current_degree_name"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ onChange, value }) =>
+                                        <Input onChange={(text, e) => onChange(e)} value={value} placeholder="Degree Name" />}
+                                />
 
-            }
-        </Panel>
+                            </Col>
+                        </Row >
+                        <Row style={{ marginTop: 15 }} className="">
+                            <Col xs={24} md={24}>
+                                <Controller
+                                    name="current_institute_name"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ onChange, value }) =>
+                                        <Input onChange={(text, e) => onChange(e)} placeholder="Name of Institute" />}
+                                />
+
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} md={12}>
+                                <Controller
+                                    name="current_start_year"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ onChange, value }) =>
+                                        <InputNumber onChange={(text, e) => onChange(e)} placeholder="Start Year" />}
+                                />
+
+                            </Col>
+                            <Col xs={24} md={12}>
+                                <Controller
+                                    name="current_end_year"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ onChange, value }) =>
+                                        <InputNumber onChange={(text, e) => onChange(e)} placeholder="End Year" />}
+                                />
+
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={24}>
+                                <Controller
+                                    name="current_passing_grade"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{ required: true }}
+                                    options={grades}
+                                    as={<InputPicker name="current_passing_grade" block placeholder="Passing Grade" data={grades} />}
+                                />
+                                {errors.current_passing_grade && <p>This is required</p>}
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={24}>
+                                <Controller
+                                    name="major_subject"
+                                    control={control}
+                                    rules={{ required: true, maxLength: 2, max: 2 }}
+                                    defaultValue=""
+                                    options={subjects}
+                                    as={<TagPicker name="major_subject" block placeholder="Major Subject" data={subjects} />}
+                                />
+                                {errors.major_subject && <p>This is required</p>}
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={24}>
+                                <Controller
+                                    name="minor_subject"
+                                    control={control}
+                                    defaultValue=""
+                                    options={subjects}
+                                    as={<TagPicker name="minor_subject" block placeholder="Minor Subject" data={subjects} />}
+                                />
+
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={12}>
+                                <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
+                            </Col>
+                            <Col xs={24} sm={24} md={12}>
+                                <Button type="submit" block onClick={handleSubmit(onSubmit)} appearance="primary"> Submit </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                }
+                {show_accordian && user_educations.length > 0 &&
+                    <div>
+                        <h4>Your Educations</h4>
+                        <PanelGroup style={{ marginTop: 10 }} accordion bordered>
+                            {user_educations.map((education) => {
+                                return (
+                                    <Panel header={education.current_degree_name}>
+                                        <p>{education.current_start_year}</p>
+                                    </Panel>
+                                )
+                            })}
+                        </PanelGroup>
+                        <Button onClick={toggleForm} style={{ marginTop: 10 }} appearance="primary"> Add More</Button>
+                    </div>
+
+                }
+            </Panel>
     )
 
 }
