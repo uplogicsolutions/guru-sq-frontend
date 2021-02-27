@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Panel, Row, Col, Form, InputPicker, Button, Input, Icon, IconButton, DatePicker, InputNumber, PanelGroup, TagPicker } from 'rsuite';
+import { useDispatch, useSelector } from 'react-redux'
+import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
+import { registerSchoolDetails } from 'api/auth';
+import { getOptions } from 'api/options'
+import { parseArrayOfObject } from 'utils/parse';
 
 const JobDetails = (props) => {
 
@@ -15,6 +20,27 @@ const JobDetails = (props) => {
     const [end_year, setEndYear] = useState('')
     const [form_of_contract, setFormOfContract] = useState('')
     const [description, setDescription] = useState('')
+
+    const [subjectsData, setSubjectsData] = useState([])
+    const [formOfContractsData, setFormOfContractsData] = useState([])
+
+    const dispatch = useDispatch()
+    const { loading, redirect, redirectUrl, error } = useSelector(state => state.register)
+
+    const parseOption = [{ oldKey: 'option_id', newKey: 'value' }, { oldKey: 'label', newKey: 'label' }]
+    const parseSubject = [{ oldKey: 'subject_id', newKey: 'value' }, { oldKey: 'subject_name', newKey: 'label' }]
+
+    const loadOptions = async () => {
+        let subjectData = await getOptions('subjects')
+        setSubjectsData(parseArrayOfObject(parseSubject, subjectData.data.data))
+        let formData = await getOptions('formOfContracts')
+        setFormOfContractsData(parseArrayOfObject(parseOption, formData.data.data))
+    }
+
+    useEffect(() => {
+        dispatch(resetRegisterStates())
+        loadOptions()
+    }, [])
 
     
     //TODO fetch educations from server
@@ -81,6 +107,10 @@ const JobDetails = (props) => {
         setShowForm(!show_form);
     }
 
+    if (redirect) {
+        props.history.push(redirectUrl);
+    }
+
     return (
         <Panel shaded style={{background:'white'}}>
             {show_form && 
@@ -97,13 +127,13 @@ const JobDetails = (props) => {
                     </Row>
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <TagPicker block  name="core_subjects" onSelect={(core_subjects) => setCoreSubjects(core_subjects)}  placeholder="Core Subjects" data={test} />
+                            <TagPicker block  name="core_subjects" onSelect={(core_subjects) => setCoreSubjects(core_subjects)}  placeholder="Core Subjects" data={subjectsData} />
                         </Col>
                     </Row>
                     
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
-                            <TagPicker block name="supplementary_subjects" onSelect={(supplementary_subjects) => setSupplementarySubjects(supplementary_subjects)}  placeholder="Supplementary Subjects" data={test} />
+                            <TagPicker block name="supplementary_subjects" onSelect={(supplementary_subjects) => setSupplementarySubjects(supplementary_subjects)}  placeholder="Supplementary Subjects" data={subjectsData} />
                         </Col>
                     </Row>
                     
@@ -127,12 +157,12 @@ const JobDetails = (props) => {
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={24}>
-                            <InputPicker block name="form_of_contract" onSelect={(form) => setFormOfContract(form_of_contract)}  placeholder="Form of Contract" data={test} />
+                            <InputPicker block name="form_of_contract" onSelect={(form) => setFormOfContract(form_of_contract)}  placeholder="Form of Contract" data={formOfContractsData} />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15}} className="">
                         <Col xs={24} md={24}>
-                            <Input inputRef name="description" onChange={(text) => setDescription(text)} placeholder="Description" />
+                            <Input name="description" onChange={(text) => setDescription(text)} placeholder="Description" />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
