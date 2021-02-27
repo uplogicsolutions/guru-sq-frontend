@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon, Loader } from 'rsuite';
+import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon, Loader, Alert } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
 import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
 import { registerPersonalDetails } from 'api/auth'
