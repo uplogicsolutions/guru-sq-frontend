@@ -9,6 +9,8 @@ import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
 import AuthService from 'auth/Auth';
 import 'rsuite/lib/styles/index.less';
 
+import test from 'pages/test/test';
+
 const App = () => {
 
   useEffect( () => {
@@ -18,10 +20,12 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        {/* <MainNav /> */}
         <Switch>
           <Route exact path="/">
             <Redirect to="/landing" />
           </Route>
+          <Route path="/test" component={test} />
           {
             formRoutes.map((route, index) => <FormLayoutRoute key={index} path={route.path} component={route.component} />)
           }
