@@ -28,6 +28,23 @@
   color: #61dafb;
 }
 
+.bg-whitesmoke {
+  background-color: whitesmoke;
+}
+
+.bg-white {
+  background: white;
+}
+
+.bg-custom-gray {
+  background: rgb(250, 250, 250);
+}
+
+.custom-card {
+  border-color:'#ccc',;
+  box-shadow: 0.5px 0.5px 1px gray;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

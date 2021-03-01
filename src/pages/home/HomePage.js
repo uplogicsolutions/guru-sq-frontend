@@ -1,3 +1,4 @@
+import React from 'react';
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage"
 import {
@@ -22,7 +23,7 @@ const username = "Jhon";
 const Homepage = () => {
     return (
         <BasePage>
-            <Grid fluid style={{ marginTop: 10 }}>
+            <Grid fluid style={{ paddingTop:12, background:'#f3f2ef' }}>
                 <Row>
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
@@ -31,7 +32,7 @@ const Homepage = () => {
                     </Col>
                     <Col xs={24} md={14}>
                         {/* Upper Post Box */}
-                        <Panel shaded bordered>
+                        <Panel className="custom-card bg-custom-gray" bordered>
                             <Row>
                                 <InputGroup>
                                     <Input icon block placeholder={`Hi ${username}, Anything for today ?`} />
@@ -63,6 +64,7 @@ const Homepage = () => {
                                 </Col>
                             </Row>
                         </Panel>
+                        <hr />
                         {/* User Post's */}
                         <UserPost />
 

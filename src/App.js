@@ -7,6 +7,7 @@ import BasicLayoutRoute from "layouts/BasicLayout";
 import { routes as formRoutes } from 'routes/formLayoutRoutes';
 import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
 import AuthService from 'auth/Auth';
+import './App.css'
 import 'rsuite/lib/styles/index.less';
 
 import test from 'pages/test/test';

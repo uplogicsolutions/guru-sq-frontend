@@ -20,7 +20,7 @@ const UserPost = props => {
     const { isLiked } = props;
 
     return (
-        <Panel style={{ marginTop: 12 }} shaded bordered>
+        <Panel className="custom-card bg-custom-gray" style={{ marginTop: 12 }} bordered>
             <Row>
                 <Col xs={24} md={24}>
                     <Row>
