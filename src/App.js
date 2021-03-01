@@ -13,9 +13,9 @@ import test from 'pages/test/test';
 
 const App = () => {
 
-  useEffect( () => {
+  useEffect(() => {
     const result = AuthService.checkInitState()
-  },[]);
+  }, []);
 
   return (
     <Provider store={store}>

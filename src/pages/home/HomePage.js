@@ -1,9 +1,6 @@
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage"
 import {
-    Navbar,
-    Nav,
-    Dropdown,
     Icon,
     Grid,
     Row,
@@ -12,15 +9,15 @@ import {
     Input,
     InputGroup
 } from "rsuite";
-import { 
+import {
     FaImage,
     FaVideo,
     FaListUl,
-    FaChild
+    FaCamera
 
 } from "react-icons/fa";
+import ButtonCard from "components/buttonCard/ButtonCard";
 
-const activeKey = 0;
 const username = "Jhon";
 const Homepage = () => {
     return (
@@ -29,7 +26,7 @@ const Homepage = () => {
                 <Row>
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
-                                
+
                         </Panel>
                     </Col>
                     <Col xs={24} md={14}>
@@ -45,37 +42,30 @@ const Homepage = () => {
                             </Row>
                             <Row style={{ marginTop: 12 }}>
                                 <Col xs={12} md={6}>
-                                    <Panel bordered shaded>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" ,alignItems: "center" }}>
-                                            <FaImage style={{margin:"0 5px"}} color="lightblue" size="20" /> <b>Image</b>
-                                        </div>
-                                    </Panel>
+                                    <ButtonCard label="Photo">
+                                        <FaImage style={{ margin: "0 5px" }} color="lightblue" size="20" />
+                                    </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <Panel bordered shaded>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" ,alignItems: "center" }}>
-                                            <FaVideo style={{margin:"0 5px"}} color="salmon" size="20" /> <b>Video</b>
-                                        </div>
-                                    </Panel>
+                                    <ButtonCard label="Video">
+                                        <FaVideo style={{ margin: "0 5px" }} color="salmon" size="20" />
+                                    </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <Panel bordered shaded style={{cursor:"pointer"}}>
-                                        <div style={{ display: "flex", flexDirection: "row",justifyContent: "center" ,alignItems: "center" }}>
-                                            <FaListUl style={{margin:"0 5px"}} color="yellowgreen" size="20" /> <b>Text</b>
-                                        </div>
-                                    </Panel>
+                                    <ButtonCard label="Text">
+                                        <FaListUl style={{ margin: "0 5px" }} color="yellowgreen" size="20" />
+                                    </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <Panel bordered shaded>
-                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" ,alignItems: "center" }}>
-                                            <FaChild style={{margin:"0 5px"}} color="gold" size="20" /> <b>Achivement</b>
-                                        </div>
-                                    </Panel>
+                                    <ButtonCard label="Camera">
+                                        <FaCamera style={{ margin: "0 5px" }} color="gold" size="20" />
+                                    </ButtonCard>
                                 </Col>
                             </Row>
                         </Panel>
                         {/* User Post's */}
                         <UserPost />
+
 
                     </Col>
                     <Col xsHidden md={5}>
