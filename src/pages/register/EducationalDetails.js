@@ -6,6 +6,7 @@ import { registerEducationalDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
 import { useForm, Controller } from "react-hook-form";
+import Danger from 'components/alerts/Danger';
 
 
 const EducationalDetails = (props) => {
@@ -115,9 +116,17 @@ const EducationalDetails = (props) => {
                                     name="current_degree_name"
                                     control={control}
                                     defaultValue=""
+                                    rules={{
+                                        required: true
+                                    }}
                                     render={({ onChange, value }) =>
-                                        <Input onChange={(text, e) => onChange(e)} value={value} placeholder="Degree Name" />}
+                                        <Input
+                                            onChange={(text, e) => onChange(e)}
+                                            value={value}
+                                            placeholder="Degree Name" />
+                                    }
                                 />
+                                {errors.current_degree_name?.type === 'required' && <Danger>* Required</Danger>}
 
                             </Col>
                         </Row >
@@ -127,10 +136,16 @@ const EducationalDetails = (props) => {
                                     name="current_institute_name"
                                     control={control}
                                     defaultValue=""
+                                    rules={{
+                                        required: true
+                                    }}
                                     render={({ onChange, value }) =>
-                                        <Input onChange={(text, e) => onChange(e)} placeholder="Name of Institute" />}
+                                        <Input
+                                            onChange={(text, e) => onChange(e)}
+                                            placeholder="Name of Institute" />
+                                    }
                                 />
-
+                                {errors.current_institute_name?.type === 'required' && <Danger>* Required</Danger>}
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
@@ -139,19 +154,34 @@ const EducationalDetails = (props) => {
                                     name="current_start_year"
                                     control={control}
                                     defaultValue=""
+                                    rules={{
+                                        required: true
+                                    }}
                                     render={({ onChange, value }) =>
-                                        <InputNumber onChange={(text, e) => onChange(e)} placeholder="Start Year" />}
+                                        <InputNumber
+                                            onChange={(text, e) => onChange(e)}
+                                            placeholder="Start Year" />
+                                    }
                                 />
+                                {errors.current_start_year?.type === 'required' && <Danger>* Required</Danger>}
 
                             </Col>
-                            <Col xs={24} md={12}>
+                            <Col className="mt-5 md:mt-0" xs={24} md={12}>
                                 <Controller
+
                                     name="current_end_year"
                                     control={control}
                                     defaultValue=""
+                                    rules={{
+                                        required: true
+                                    }}
                                     render={({ onChange, value }) =>
-                                        <InputNumber onChange={(text, e) => onChange(e)} placeholder="End Year" />}
+                                        <InputNumber
+                                            onChange={(text, e) => onChange(e)}
+                                            placeholder="End Year" />
+                                    }
                                 />
+                                {errors.current_end_year?.type === 'required' && <Danger>* Required</Danger>}
 
                             </Col>
                         </Row>
@@ -163,9 +193,14 @@ const EducationalDetails = (props) => {
                                     defaultValue=""
                                     rules={{ required: true }}
                                     options={grades}
-                                    as={<InputPicker name="current_passing_grade" block placeholder="Passing Grade" data={grades} />}
+                                    as={<InputPicker
+                                        name="current_passing_grade"
+                                        block
+                                        placeholder="Passing Grade"
+                                        data={grades} />
+                                    }
                                 />
-                                {errors.current_passing_grade && <p>This is required</p>}
+                                {errors.current_passing_grade && <Danger>* Required</Danger>}
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
@@ -173,12 +208,18 @@ const EducationalDetails = (props) => {
                                 <Controller
                                     name="major_subject"
                                     control={control}
-                                    rules={{ required: true, maxLength: 2, max: 2 }}
+                                    rules={{ required: true }}
                                     defaultValue=""
                                     options={subjects}
-                                    as={<TagPicker name="major_subject" block placeholder="Major Subject" data={subjects} />}
+                                    as={
+                                        <TagPicker
+                                            name="major_subject"
+                                            block
+                                            placeholder="Major Subject"
+                                            data={subjects} />
+                                    }
                                 />
-                                {errors.major_subject && <p>This is required</p>}
+                                {errors.major_subject && <Danger>* Required</Danger>}
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
@@ -187,10 +228,18 @@ const EducationalDetails = (props) => {
                                     name="minor_subject"
                                     control={control}
                                     defaultValue=""
+                                    // rules={{ required: true }}
                                     options={subjects}
-                                    as={<TagPicker name="minor_subject" block placeholder="Minor Subject" data={subjects} />}
+                                    as={
+                                        <TagPicker
+                                            name="minor_subject"
+                                            block
+                                            placeholder="Minor Subject"
+                                            data={subjects}
+                                        />
+                                    }
                                 />
-
+                                {/* {errors.minor_subject?.type === 'required' && <Danger>* Required</Danger>} */}
                             </Col>
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
@@ -198,7 +247,7 @@ const EducationalDetails = (props) => {
                                 <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
                             </Col>
                             <Col xs={24} sm={24} md={12}>
-                                <Button type="submit" block onClick={handleSubmit(onSubmit)} appearance="primary"> Submit </Button>
+                                <Button type="submit" block appearance="primary"> Submit </Button>
                             </Col>
                         </Row>
                     </Form>

@@ -15,7 +15,7 @@ const ButtonCard = (props) => {
 
     return (
         <button style={buttonCss} onClick={() => console.log('Hi')}>
-            <Panel bordered>
+            <Panel className="bg-white" bordered>
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                     {children} <b>{label}</b>
                 </div>

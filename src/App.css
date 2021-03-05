@@ -37,12 +37,12 @@
 }
 
 .bg-custom-gray {
-  background: rgb(250, 250, 250);
+  background: rgb(255, 255, 255);
 }
 
 .custom-card {
   border-color:'#ccc',;
-  box-shadow: 0.5px 0.5px 1px gray;
+  box-shadow: 0.5px 0.5px 0.5px goldenrod;
 }
 
 @keyframes App-logo-spin {

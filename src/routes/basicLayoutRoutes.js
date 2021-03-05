@@ -1,5 +1,6 @@
 import LandingPage from 'pages/landing/LandingPage'
 import Homepage from 'pages/home/HomePage'
+import ProfilePage from 'pages/profile/ProfilePage'
 
 export const routes = [
     {
@@ -11,4 +12,8 @@ export const routes = [
         path: '/home',
         component: Homepage
     },
+    {
+        path: '/profile',
+        component: ProfilePage
+    }
 ]

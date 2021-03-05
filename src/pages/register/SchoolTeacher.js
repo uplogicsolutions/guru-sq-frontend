@@ -6,18 +6,20 @@ import { registerSchoolDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
 
+import { useForm, Controller } from 'react-hook-form';
+import Danger from 'components/alerts/Danger';
+
+
 const SchoolTeacher = (props) => {
     const [isSchoolTeacher, setIsSchoolTeacher] = useState(undefined);
     const [teacher_type, setTeacherType] = useState(null);
-    const [school_type, setSchoolType] = useState('');
-    const [board_of_education, setBoardOfEducation] = useState('');
-    const [medium_of_language, setMediumOfLanguage] = useState('');
-    const [teaching_license, setTeachingLicense] = useState('');
 
     const [school_type_data, setSchoolTypeData] = useState([]);
     const [board_of_education_data, setBoardOfEducationData] = useState([]);
     const [medium_of_language_data, setMediumOfLanguageData] = useState([]);
     const [teaching_license_data, setTeachingLicenseData] = useState([]);
+
+    const { errors, control, handleSubmit } = useForm();
 
 
     const dispatch = useDispatch()
@@ -56,14 +58,21 @@ const SchoolTeacher = (props) => {
         }
     }
 
-    const handleSubmit = () => {
+    const handleOnSubmit = (form_data) => {
+        // let data = {
+        //     teacher_type: teacher_type,
+        //     type_of_school_id: school_type,
+        //     license_id: teaching_license,
+        //     board_id: board_of_education,
+        //     medium_of_instructions_id: medium_of_language
+        // }
+
         let data = {
-            teacher_type: teacher_type,
-            type_of_school_id: school_type,
-            license_id: teaching_license,
-            board_id: board_of_education,
-            medium_of_instructions_id: medium_of_language
+            ...form_data,
+            teacher_type
         }
+        // console.log(data)
+        // console.log(teacher_type)
         register(data)
     }
 
@@ -88,7 +97,7 @@ const SchoolTeacher = (props) => {
             <Loader size='md' center={true} />
             :
             <Panel style={{ background: 'white' }} shaded>
-                <Form>
+                <Form onSubmit={handleSubmit(handleOnSubmit)}>
                     <Row>
                         <Col className="text-center" xs={24} sm={24} md={24}>
                             <h3>Are you a school teacher ?</h3>
@@ -126,25 +135,77 @@ const SchoolTeacher = (props) => {
                             <hr />
                             <Row style={{ marginTop: 15 }} className="show-grid">
                                 <Col xs={24} md={24}>
-                                    <InputPicker onSelect={(value) => setSchoolType(value)} block placeholder="School Type" data={school_type_data} />
+                                    <Controller
+                                        name="type_of_school_id"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{ required: true }}
+                                        options={school_type_data}
+                                        as={<InputPicker
+                                            name="type_of_school_id"
+                                            block
+                                            placeholder="School Type"
+                                            data={school_type_data}
+                                        />}
+                                    />
+                                    {errors.type_of_school_id?.type === 'required' && <Danger>* Required</Danger>}
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: 15 }} className="show-grid">
                                 <Col xs={24} md={24}>
-                                    <InputPicker onSelect={(value) => setBoardOfEducation(value)} block placeholder="Board of Education" data={board_of_education_data} />
+                                    <Controller
+                                        name="board_id"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{ required: true }}
+                                        options={board_of_education_data}
+                                        as={<InputPicker
+                                            name="board_id"
+                                            block
+                                            placeholder="Board of Education"
+                                            data={board_of_education_data}
+                                        />}
+                                    />
+                                    {errors.board_id?.type === 'required' && <Danger>* Required</Danger>}
+
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: 15 }} className="show-grid">
                                 <Col xs={24} md={24}>
-                                    <InputPicker onSelect={(value) => setMediumOfLanguage(value)} block placeholder="Medium of Language" data={medium_of_language_data} />
+                                    <Controller
+                                        name="medium_of_instructions_id"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{ required: true }}
+                                        options={medium_of_language_data}
+                                        as={<InputPicker
+                                            name="medium_of_instructions_id"
+                                            block
+                                            placeholder="Medium of Language"
+                                            data={medium_of_language_data}
+                                        />}
+                                    />
+                                    {errors.board_id?.type === 'medium_of_instructions_id' && <Danger>* Required</Danger>}
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: 15 }} className="show-grid">
                                 <Col xs={24} md={24}>
-                                    <InputPicker onSelect={(value) => setTeachingLicense(value)} block placeholder="Teaching License you have" data={teaching_license_data} />
+                                    <Controller
+                                        name="license_id"
+                                        control={control}
+                                        defaultValue=""
+                                        rules={{ required: true }}
+                                        options={teaching_license_data}
+                                        as={<InputPicker
+                                            name="license_id"
+                                            block
+                                            placeholder="Teaching License you have"
+                                            data={teaching_license_data}
+                                        />}
+                                    />
                                 </Col>
                             </Row>
-                            <Button onClick={handleSubmit} className="mt-2" block appearance="primary"> <b>NEXT</b> </Button>
+                            <Button type="submit" className="mt-2" block appearance="primary"> <b>NEXT</b> </Button>
                         </>
                     )}
                 </Form>
