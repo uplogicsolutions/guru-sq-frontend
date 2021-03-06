@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadPosts, likePost, commentPost, addPost } from './store';
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage"
 import {
@@ -21,9 +23,42 @@ import ButtonCard from "components/buttonCard/ButtonCard";
 
 const username = "Jhon";
 const Homepage = () => {
+    const dispatch = useDispatch()
+    const { loading, posts, error } = useSelector(state => state.post)
+
+    useEffect(() => {
+        dispatch(loadPosts())
+    }, [])
+
+    const handleLike = (post_id) => {
+        let data = {
+            post_id
+        };
+        dispatch(likePost(data));
+    }
+
+    const handleComment = (post_id, comment) => {
+        let data = {
+            post_id,
+            comment
+        };
+        dispatch(commentPost(data));
+    }
+
+    const handleAdd = (file, post_type, post_description, visibility) => {
+
+        let data = {
+            file,
+            post_type,
+            post_description,
+            visibility
+        };
+        dispatch(addPost(data));
+    }
+
     return (
         <BasePage>
-            <Grid fluid style={{ paddingTop:12, background:'#f3f2ef' }}>
+            <Grid fluid style={{ paddingTop: 12, background: '#f3f2ef' }}>
                 <Row>
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
