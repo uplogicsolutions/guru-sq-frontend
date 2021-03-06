@@ -105,8 +105,8 @@ const Homepage = () => {
 
 
                     </Col>
-                    <Col xsHidden md={5}>
-                    </Col>
+                    <Col xsHidden md={5} />
+                    
                 </Row>
             </Grid>
         </BasePage>

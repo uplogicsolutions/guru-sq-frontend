@@ -45,18 +45,18 @@ const UserPost = props => {
                 <Col xs={24} md={10}>
                     <FlexboxGrid justify="space-between">
                         <FlexboxGrid.Item >
+                            <Button style={{display:"inline-block"}} appearance="default">
+                                <FaHeart color={`${isLiked ? 'red' : ''}`} className="inline" /> Like                            
+                            </Button>
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid.Item>
                             <Button appearance="default">
-                                <FaHeart color={`${isLiked ? 'red' : ''}`} /> Like
+                                <FaComment className="inline"  /> Comment
                         </Button>
                         </FlexboxGrid.Item>
                         <FlexboxGrid.Item>
                             <Button appearance="default">
-                                <FaComment /> Comment
-                        </Button>
-                        </FlexboxGrid.Item>
-                        <FlexboxGrid.Item>
-                            <Button appearance="default">
-                                <FaShare /> Share
+                                <FaShare className="inline"  /> Share
                         </Button>
                         </FlexboxGrid.Item>
                     </FlexboxGrid>
