@@ -250,7 +250,7 @@ const JobDetails = (props) => {
                     </Row>
                     <Row>
                         <Col xs={24}>
-                            <Checkbox onChange={(val, checked) => {trigger('end_year'); setIsWorking(checked)}}> Currently working here ?</Checkbox>
+                            <Checkbox onChange={(val, checked) => {setIsWorking(checked); trigger('end_year'); }}> Currently working here ?</Checkbox>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">

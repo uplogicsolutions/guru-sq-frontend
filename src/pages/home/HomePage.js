@@ -1,6 +1,8 @@
 import React from 'react';
 import UserPost from "components/userpost/UserPost";
-import BasePage from "pages/base/BasePage"
+import BasePage from "pages/base/BasePage";
+import NewPostModal from 'components/userpost/NewPostModal';
+
 import {
     Icon,
     Grid,
@@ -18,12 +20,24 @@ import {
 
 } from "react-icons/fa";
 import ButtonCard from "components/buttonCard/ButtonCard";
+import { useState } from 'react/cjs/react.development';
 
 const username = "Jhon";
+
+
 const Homepage = () => {
+
+    const [showNewPostModal, setShowNewPostModal] = useState(false)
+    const handleClose = () => setShowNewPostModal(false);
+
     return (
         <BasePage>
-            <Grid fluid style={{ paddingTop:12, background:'#f3f2ef' }}>
+            <Grid fluid style={{ paddingTop: 12, background: '#f3f2ef' }}>
+                <Row>
+                    <Col xs={20} md={18}>
+                        {showNewPostModal && <NewPostModal show={showNewPostModal} handleClose={handleClose} />}
+                    </Col>
+                </Row>
                 <Row>
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
@@ -43,7 +57,7 @@ const Homepage = () => {
                             </Row>
                             <Row style={{ marginTop: 12 }}>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard label="Photo">
+                                    <ButtonCard onClick={() => setShowNewPostModal(true)} label="Photo">
                                         <FaImage style={{ margin: "0 5px" }} color="lightblue" size="20" />
                                     </ButtonCard>
                                 </Col>

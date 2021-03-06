@@ -5,7 +5,7 @@ import {
 
 const ButtonCard = (props) => {
 
-    const { label, children } = props;
+    const { label, children, onClick } = props;
 
     const buttonCss = {
         outline: 0,
@@ -14,7 +14,7 @@ const ButtonCard = (props) => {
     };
 
     return (
-        <button style={buttonCss} onClick={() => console.log('Hi')}>
+        <button style={buttonCss} onClick={onClick}>
             <Panel className="bg-white" bordered>
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                     {children} <b>{label}</b>
