@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadPosts, likePost, commentPost, addPost } from './store';
+import { loadPosts, likePost, commentPost } from './store';
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage";
 import NewPostModal from 'components/userpost/NewPostModal';
@@ -54,17 +54,6 @@ const Homepage = () => {
         dispatch(commentPost(data));
     }
 
-    const handleAdd = (file, post_type, post_description, visibility) => {
-
-        let data = {
-            file,
-            post_type,
-            post_description,
-            visibility
-        };
-        dispatch(addPost(data));
-    }
-
     const showModal = (type) => {
         setShowNewPostModal(true);
         setAccept(type);
@@ -97,7 +86,7 @@ const Homepage = () => {
                             </Row>
                             <Row style={{ marginTop: 12 }}>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard onClick={() => showModal("img")} label="Photo">
+                                    <ButtonCard onClick={() => showModal("image")} label="Photo">
                                         <FaImage style={{ margin: "0 5px" }} color="lightblue" size="20" />
                                     </ButtonCard>
                                 </Col>

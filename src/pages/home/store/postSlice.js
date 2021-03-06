@@ -48,25 +48,20 @@ export const addPost = createAsyncThunk(
   'post/add',
   async (_data, { getState }) => {
     const ReactS3Client = new S3(s3Config)
-    const extension = '.jpg'; //get extension from _data.file.name
-    const post_url = `uuid.${extension}`; //generate using uuid and extension
 
-    //Get file extension
-    let regex = /(?:\.([^.]+))?$/;
-    let file_extension = regex.exec(_data.file.name)
-    console.log('Extension:', file_extension)
+    let fileSplit = _data.file.name.split(".");
+    let extension = fileSplit[fileSplit.length - 1];
 
     //generate url
     let generated_uuid = uuid()
-    let URL = `${generated_uuid}.${file_extension}`
+    let post_url = `${generated_uuid}.${extension}`
 
-    ReactS3Client.uploadFile(_data.file, post_url)
+    ReactS3Client.uploadFile(_data.file.blobFile, post_url)
       .then((response) => {
-        console.log(response)
         if (response.status == 204) {
           let data = {
             post_type: _data.post_type,
-            post_url: post_url,
+            post_url: response.location,
             post_description: _data.post_description,
             visibility: _data.visibility
           };
@@ -112,9 +107,9 @@ const postSlice = createSlice({
       console.log(action.payload);
     },
     [likePost.fulfilled]: (state, action) => {
-      if(action.payload.type == 'success') {
+      if (action.payload.type == 'success') {
         for (let post of state.posts) {
-          if(post.post_id == action.payload.data.data.post_id) {
+          if (post.post_id == action.payload.data.data.post_id) {
             post.isLiked = !post.isLiked;
             post.likesCount = action.payload.data.data.likesCount;
           }
@@ -124,9 +119,9 @@ const postSlice = createSlice({
       }
     },
     [commentPost.fulfilled]: (state, action) => {
-      if(action.payload.type == 'success') {
+      if (action.payload.type == 'success') {
         for (let post of state.posts) {
-          if(post.post_id == action.payload.data.data.post_id) {
+          if (post.post_id == action.payload.data.data.post_id) {
             post.comments = post.comments;
           }
         }
