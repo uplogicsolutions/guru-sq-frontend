@@ -29,6 +29,7 @@ const username = "Jhon";
 
 const Homepage = () => {
 
+    const [accept, setAccept] = useState("")
     const [showNewPostModal, setShowNewPostModal] = useState(false)
     const handleClose = () => setShowNewPostModal(false);
     const dispatch = useDispatch()
@@ -64,12 +65,17 @@ const Homepage = () => {
         dispatch(addPost(data));
     }
 
+    const showModal = (type) => {
+        setShowNewPostModal(true);
+        setAccept(type);
+    }
+
     return (
         <BasePage>
             <Grid fluid style={{ paddingTop: 12, background: '#f3f2ef' }}>
                 <Row>
                     <Col xs={20} md={18}>
-                        {showNewPostModal && <NewPostModal show={showNewPostModal} handleClose={handleClose} />}
+                        {showNewPostModal && <NewPostModal show={showNewPostModal} handleClose={handleClose} postType={accept}/>}
                     </Col>
                 </Row>
                 <Row>
@@ -91,22 +97,22 @@ const Homepage = () => {
                             </Row>
                             <Row style={{ marginTop: 12 }}>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard onClick={() => setShowNewPostModal(true)} label="Photo">
+                                    <ButtonCard onClick={() => showModal("img")} label="Photo">
                                         <FaImage style={{ margin: "0 5px" }} color="lightblue" size="20" />
                                     </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard label="Video">
+                                    <ButtonCard onClick={() => showModal("video")} label="Video">
                                         <FaVideo style={{ margin: "0 5px" }} color="salmon" size="20" />
                                     </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard label="Text">
+                                    <ButtonCard onClick={() => showModal("text")} label="Text">
                                         <FaListUl style={{ margin: "0 5px" }} color="yellowgreen" size="20" />
                                     </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard label="Camera">
+                                    <ButtonCard onClick={() => showModal("camera")} label="Camera">
                                         <FaCamera style={{ margin: "0 5px" }} color="gold" size="20" />
                                     </ButtonCard>
                                 </Col>

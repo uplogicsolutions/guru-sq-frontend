@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
 import { FaFile } from 'react-icons/fa';
-import { Button, Col, Grid, Modal, Row, Uploader } from 'rsuite';
+import { Button, Col, Grid, Input, Modal, Row, Uploader } from 'rsuite';
 import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
 
-const NewPostModal = ({ handleClose, show }) => {
-    console.log('I Loaded')
+const NewPostModal = ({ handleClose, show, postType }) => {
+    console.log(postType)
+
+    let accept;
+    switch(postType) {
+        case 'img' : accept = "image/png, image/jpeg";
+                    break;
+        case 'video': accept = "video/*";
+                        break;  
+        case 'camera': accept = "video/*,image/*"
+                        break;
+        default:
+            break;
+    }
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header>
-                <Modal.Title>Modal Title</Modal.Title>
+                <Modal.Title>New Post</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <PlaceholderParagraph rows={10} />
-                <Uploader autoUpload={false} multiple={false} accept="pdf" draggable>
+                
+                {postType === 'text' ? <Input componentClass="textarea" rows={5} placeholder="What's your tought ?" /> : (<Uploader autoUpload={false} multiple={false} accept={accept} draggable>
                     <div>
                         Click or Drag files to this area to upload
                     </div>
-                </Uploader>
+                </Uploader>)}
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={handleClose} appearance="primary">

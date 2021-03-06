@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { get, like, comment, add } from 'api/post'
 import S3 from 'react-aws-s3'
 import s3Config from 'configs/s3Config'
+import { uuid } from 'short-uuid'
 
 export const loadPosts = createAsyncThunk(
   'post/load',
@@ -49,8 +50,18 @@ export const addPost = createAsyncThunk(
     const extension = '.jpg'; //get extension from _data.file.name
     const post_url = `uuid.${extension}`; //generate using uuid and extension
 
+    //Get file extension
+    let regex = /(?:\.([^.]+))?$/;
+    let file_extension = regex.exec(_data.file.name)
+    console.log('Extension:', file_extension)
+
+    //generate url
+    let generated_uuid = uuid()
+    let URL = `${generated_uuid}.${file_extension}`
+
     ReactS3Client.uploadFile(_data.file, post_url)
       .then((response) => {
+        console.log(response)
         if (response.status == 204) {
           let data = {
             post_type: _data.post_type,
