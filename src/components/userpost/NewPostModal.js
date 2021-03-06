@@ -4,8 +4,6 @@ import { Button, Col, Grid, Input, Modal, Row, Uploader } from 'rsuite';
 import PlaceholderParagraph from 'rsuite/lib/Placeholder/PlaceholderParagraph';
 
 const NewPostModal = ({ handleClose, show, postType }) => {
-    console.log(postType)
-
     let accept;
     switch(postType) {
         case 'img' : accept = "image/png, image/jpeg";

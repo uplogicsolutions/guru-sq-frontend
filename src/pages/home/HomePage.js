@@ -120,9 +120,10 @@ const Homepage = () => {
                         </Panel>
                         <hr />
                         {/* User Post's */}
-                        <UserPost />
-
-
+                        {
+                            posts.map( (post, index) =>
+                                <UserPost key={index} post={post} handleLike={handleLike} />)
+                        }
                     </Col>
                     <Col xsHidden md={5} />
                     

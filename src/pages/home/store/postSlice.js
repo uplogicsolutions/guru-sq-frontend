@@ -3,6 +3,7 @@ import { get, like, comment, add } from 'api/post'
 import S3 from 'react-aws-s3'
 import s3Config from 'configs/s3Config'
 import { uuid } from 'short-uuid'
+import { act } from '@testing-library/react'
 
 export const loadPosts = createAsyncThunk(
   'post/load',
@@ -102,20 +103,36 @@ const postSlice = createSlice({
     },
     [loadPosts.fulfilled]: (state, action) => {
       state.loading = false;
-      if (action.payload.type == 'success') state.posts = action.payload.data;
-      else state.error = action.payload.message;
+      console.log(action.payload)
+      if (action.payload.type == 'success') state.posts = action.payload.data.data;
+      else state.error = action.payload.data.message;
     },
     [loadPosts.rejected]: (state, action) => {
       state.loading = false;
       console.log(action.payload);
     },
     [likePost.fulfilled]: (state, action) => {
-      console.log(action.payload)
-      //update the specific post in state to set isLiked true
+      if(action.payload.type == 'success') {
+        for (let post of state.posts) {
+          if(post.post_id == action.payload.data.data.post_id) {
+            post.isLiked = !post.isLiked;
+            post.likesCount = action.payload.data.data.likesCount;
+          }
+        }
+      } else {
+        state.error = "Could not like/unlike post";
+      }
     },
     [commentPost.fulfilled]: (state, action) => {
-      console.log(action.payload)
-      //update the specific post in state to refresh comments
+      if(action.payload.type == 'success') {
+        for (let post of state.posts) {
+          if(post.post_id == action.payload.data.data.post_id) {
+            post.comments = post.comments;
+          }
+        }
+      } else {
+        state.error = "Could not comment on post";
+      }
     },
     [addPost.fulfilled]: (state, action) => {
       console.log(action.payload)
