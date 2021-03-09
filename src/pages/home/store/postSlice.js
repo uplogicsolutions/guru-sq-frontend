@@ -47,38 +47,54 @@ export const commentPost = createAsyncThunk(
 export const addPost = createAsyncThunk(
   'post/add',
   async (_data, { getState }) => {
-    const ReactS3Client = new S3(s3Config)
+    if (_data.post_type === 'text') {
+      let data = {
+        post_type: _data.post_type,
+        post_url: '',
+        post_description: _data.post_description,
+        visibility: _data.visibility
+      };
+      return add(data)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    } else {
+      const ReactS3Client = new S3(s3Config)
 
-    let fileSplit = _data.file.name.split(".");
-    let extension = fileSplit[fileSplit.length - 1];
+      let fileSplit = _data.file.name.split(".");
+      let extension = fileSplit[fileSplit.length - 1];
 
-    //generate url
-    let generated_uuid = uuid()
-    let post_url = `${generated_uuid}.${extension}`
+      //generate url
+      let generated_uuid = uuid()
+      let post_url = `${generated_uuid}.${extension}`
 
-    ReactS3Client.uploadFile(_data.file.blobFile, post_url)
-      .then((response) => {
-        if (response.status == 204) {
-          let data = {
-            post_type: _data.post_type,
-            post_url: response.location,
-            post_description: _data.post_description,
-            visibility: _data.visibility
-          };
-          return add(data)
-            .then((response) => {
-              return response;
-            })
-            .catch((error) => {
-              console.log(error)
-            });
-        } else {
-          //handle post could not be added
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+      ReactS3Client.uploadFile(_data.file.blobFile, post_url)
+        .then((response) => {
+          if (response.status == 204) {
+            let data = {
+              post_type: _data.post_type,
+              post_url: response.location,
+              post_description: _data.post_description,
+              visibility: _data.visibility
+            };
+            return add(data)
+              .then((response) => {
+                return response;
+              })
+              .catch((error) => {
+                console.log(error)
+              });
+          } else {
+            //handle post could not be added
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    }
   }
 );
 

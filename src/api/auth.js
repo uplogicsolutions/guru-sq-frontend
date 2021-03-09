@@ -3,6 +3,9 @@ import { api, successResponse, failureResponse } from 'utils/api'
 export const login = async (data) => {
     try {
         const response = await api.post('/auth/signin', data);
+        console.log('Login',response);
+        localStorage.removeItem('token');
+        localStorage.setItem('token', response.data.token);
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {

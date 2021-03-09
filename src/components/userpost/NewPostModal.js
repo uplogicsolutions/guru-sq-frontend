@@ -1,25 +1,33 @@
 import React from 'react';
 import { addPost } from 'pages/home/store';
-import { Button, Input, Modal, Uploader } from 'rsuite';
+import { Button, Input, Loader, Modal, Uploader } from 'rsuite';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react/cjs/react.development';
 
 const NewPostModal = ({ handleClose, show, postType }) => {
     const dispatch = useDispatch()
+    const [files, setFiles] = useState()
+    const [post_description, setPostDescription] = useState('')
+
     let accept;
     switch (postType) {
         case 'image': accept = "image/png, image/jpeg";
             break;
         case 'video': accept = "video/*";
             break;
-        case 'camera': accept = "video/*,image/*"
+        case 'audio': accept = "audio/*"
             break;
         default:
             break;
     }
 
-    const handleUpload = (files) => {
-        const file = files[0];
-        handleAdd(file, postType, "Testing", "Public");
+    const handleUpload = async (files) => {
+        if (postType === 'text')
+            await handleAdd(null, postType, post_description, "Public");
+        else {
+            const file = files[0];
+            await handleAdd(file, postType, post_description, "Public");
+        }
     }
 
     const handleAdd = (file, post_type, post_description, visibility) => {
@@ -39,19 +47,23 @@ const NewPostModal = ({ handleClose, show, postType }) => {
             </Modal.Header>
             <Modal.Body>
                 {
-                    postType === 'text'
+                    postType !== 'text'
                         ?
-                        <Input componentClass="textarea" rows={5} placeholder="What's your thought ?" />
+                        <React.Fragment>
+                            <Input componentClass="textarea" rows={5} onChange={(text) => setPostDescription(text)} placeholder="What's your thought ?" />
+                            <Uploader className="mt-2" autoUpload={false} multiple={false} accept={accept} draggable onChange={(files) => setFiles(files)}>
+                                <div>
+                                    Click or Drag files to this area to upload your {postType}
+                                </div>
+                            </Uploader>
+                        </React.Fragment>
                         :
-                        <Uploader autoUpload={false} multiple={false} accept={accept} draggable onChange={handleUpload}>
-                            <div>
-                                Click or Drag files to this area to upload
-                            </div>
-                        </Uploader>
+                        <Input componentClass="textarea" rows={5} onChange={(text) => setPostDescription(text)} placeholder="What's your thought ?" />
+
                 }
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={handleClose} appearance="primary">
+                <Button onClick={() => handleUpload(files)} appearance="primary">
                     Ok
             </Button>
                 <Button onClick={handleClose} appearance="subtle">

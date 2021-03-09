@@ -18,7 +18,10 @@ import {
     FaImage,
     FaVideo,
     FaListUl,
-    FaCamera
+    FaCamera,
+    FaAudible,
+    FaSpeakerDeck,
+    FaMusic
 
 } from "react-icons/fa";
 import ButtonCard from "components/buttonCard/ButtonCard";
@@ -101,8 +104,8 @@ const Homepage = () => {
                                     </ButtonCard>
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <ButtonCard onClick={() => showModal("camera")} label="Camera">
-                                        <FaCamera style={{ margin: "0 5px" }} color="gold" size="20" />
+                                    <ButtonCard onClick={() => showModal("audio")} label="Audio">
+                                        <FaMusic style={{ margin: "0 5px" }} color="gold" size="20" />
                                     </ButtonCard>
                                 </Col>
                             </Row>
