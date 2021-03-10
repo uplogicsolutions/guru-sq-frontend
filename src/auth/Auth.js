@@ -8,6 +8,7 @@ class AuthService {
             const valid = isJwtTokenValid(parsedJWT);
             if(valid) {
                 //check user state
+                //if not loggedIn
             }            
             return {
                 login: 'failure',

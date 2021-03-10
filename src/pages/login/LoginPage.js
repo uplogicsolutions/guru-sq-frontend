@@ -1,7 +1,6 @@
 import react, { useState } from 'react'
-import { Button, Form, FormControl, FormGroup, Panel, Loader, Alert, Input } from 'rsuite'
-import { loginFail, loginPending, loginSuccess } from './store'
-import { login } from 'api/auth'
+import { Button, Form, FormGroup, Panel, Loader, Alert, Input } from 'rsuite'
+import { userLogin } from './store'
 import { useDispatch, useSelector } from 'react-redux'
 
 //Form Validation
@@ -11,12 +10,9 @@ import { useForm, Controller } from "react-hook-form";
 import Danger from 'components/alerts/Danger';
 
 const LoginPage = (props) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const { control, errors , handleSubmit } = useForm();
-
-    const dispatch = useDispatch()
-    const { isLoading, isAuth, error } = useSelector(state => state.login)
+    const dispatch = useDispatch();
+    const { loading, redirect, redirectUrl, error } = useSelector(state => state.login);
 
     const isValidUsername = (username) => {
         const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -29,26 +25,15 @@ const LoginPage = (props) => {
     }
 
     const handleOnSubmit = async (data) => {
-        
-        console.log(data)
-        dispatch(loginPending())
-        const response = await login(data);
-        console.log(response)
-        if (response.type == 'success') {
-            Alert.success('Login Successfull')
-            dispatch(loginSuccess())
-        } else {
-            dispatch(loginFail(response.message))
-        }
+        dispatch(userLogin(data))
     }
 
-    if(isAuth) {
-        console.log('Login successful')
-        props.history.push('/register')
+    if(redirect) {
+        props.history.push(redirectUrl);
     }
 
     return (
-        isLoading
+        loading
             ?
             <Loader size='md' center={true} />
             :
