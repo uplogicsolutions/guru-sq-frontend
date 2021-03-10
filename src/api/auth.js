@@ -76,3 +76,15 @@ export const registerEducationalDetails = async (data) => {
     }
     return failureResponse()
 }
+
+export const checkUser = async () => {
+    try {
+        const response = await api.get('/auth/check');
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.status >= 400 && error.response.status < 500) {
+            return failureResponse(error.response.data.message)
+        }
+    }
+    return failureResponse()
+}

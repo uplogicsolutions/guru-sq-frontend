@@ -1,27 +1,29 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import FormLayoutRoute from "layouts/FormLayout";
 import BasicLayoutRoute from "layouts/BasicLayout";
 import { routes as formRoutes } from 'routes/formLayoutRoutes';
 import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
-import AuthService from 'auth/Auth';
-import './App.css'
+import './App.css';
 import 'rsuite/lib/styles/index.less';
 import test from 'pages/test/test';
 import LandingPage from 'pages/landing/LandingPage';
 import LoginPage from 'pages/login/LoginPage';
+import { checkAuth } from 'auth/store';
 
 const App = () => {
   const { loading, loggedIn, redirect, redirectUrl } = useSelector((state) => state.auth);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    AuthService.checkInitState()
+    dispatch(checkAuth())
   }, []);
 
   if(redirect) {
-    history.push(redirectUrl);
+    //history.push(redirectUrl)
+    console.log("redirect to " + redirectUrl);
   }
 
   return (

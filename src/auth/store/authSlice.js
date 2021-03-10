@@ -1,4 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+
+import { checkUser } from 'api/auth'
+
+export const checkAuth = createAsyncThunk(
+    'auth/check',
+    async (_data, { getState, dispatch }) => {
+        return checkUser()
+            .then((response) => {
+                return response;
+            })
+            .catch((error) => {
+                return error;
+            });
+    }
+);
 
 const initialState = {
     loading: false,
@@ -26,7 +41,31 @@ const authSlice = createSlice({
         },
         setRedirectUrl: (state, action) => {
             state.redirectUrl = action.payload
+        }
+    },
+    extraReducers: {
+        [checkAuth.pending]: (state, action) => {
+            state.loading = true;
         },
+        [checkAuth.fulfilled]: (state, action) => {
+            state.loading = false;
+            if (action.payload.type == 'success' && action.payload.data.isLoggedIn) {
+                state.user = action.payload.data.user;
+                state.loggedIn = true;
+                state.redirect = true;
+                state.redirectUrl = action.payload.data.redirectUrl;
+            } else {
+                state.error = action.payload.message;
+                state.redirect = true;
+                state.redirectUrl = '/landing';
+            }
+        },
+        [checkAuth.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+            state.redirect = true;
+            state.redirectUrl = '/landing';
+        }
     }
 })
 
