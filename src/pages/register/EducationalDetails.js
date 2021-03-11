@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Panel, Row, Col, Form, InputPicker, Button, Input, InputNumber, PanelGroup, TagPicker, Loader, Alert } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
-import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
+import { resetRegisterStates, registerSuccess, registerFailure, registerPending, skip } from 'pages/register/store/registerSlice'
 import { registerEducationalDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
@@ -11,18 +11,9 @@ import Danger from 'components/alerts/Danger';
 
 const EducationalDetails = (props) => {
     const { control, errors, handleSubmit } = useForm();
-
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
     const [user_educations, setUserEducations] = useState([])
-    const [major_subject, setMajorSubject] = useState([])
-    const [minor_subject, setMinorSubject] = useState([])
-
-    const [current_degree_name, setCurrentDegreeName] = useState('')
-    const [current_institute_name, setCurrentInstituteName] = useState('')
-    const [current_start_year, setCurrentStartYear] = useState('')
-    const [current_end_year, setCurrentEndYear] = useState('')
-    const [current_passing_grade, setCurrentPassingGrade] = useState('')
 
     const [subjects, setSubjects] = useState([])
     const [grades, setGrades] = useState([])
@@ -45,23 +36,36 @@ const EducationalDetails = (props) => {
         loadOptions()
     }, [])
 
-    const handleAdd = () => {
-        const data = {
-            current_degree_name,
-            current_institute_name,
-            current_start_year,
-            current_end_year,
-            current_passing_grade,
-            major_subject,
-            minor_subject
+    const submitHandler = async data => {
+        if (show_form) {
+            let education = {
+                degree_name: data.current_degree_name,
+                institute_name: data.current_institute_name,
+                start_year: data.current_start_year,
+                end_year: data.current_end_year,
+                passing_grade: data.current_passing_grade
+            }
+            console.log(education)
+            setUserEducations(user_educations => [...user_educations, education]);
+            setShowForm(false);
+            setShowAccordian(true);
+            console.log(user_educations)
+        } else if (show_accordian) {
+            let reqData = {
+                educations: user_educations,
+                major_subjects: data.major_subject,
+                minor_subjects: data.minor_subject
+            }
+            console.log(reqData)
+            // dispatch(registerPending())
+            // let response = await registerEducationalDetails(reqData);
+            // if (response.type == 'success') {
+            //     Alert.success('Yay! Added educational details Successfully')
+            //     dispatch(registerSuccess('/job-details'))
+            // } else {
+            //     dispatch(registerFailure(response.message))
+            // }
         }
-        //TODO Add api call
-        // educations.push(data);
-        console.log(data)
-        setShowForm(false);
-        setShowAccordian(true);
-
-        // console.log(educations);
     }
 
     const toggleForm = () => {
@@ -69,29 +73,8 @@ const EducationalDetails = (props) => {
         setShowForm(!show_form);
     }
 
-    const onSubmit = async data => {
-        let educations = [...user_educations]
-        educations.push({
-            degree_name: data.current_degree_name,
-            institute_name: data.current_institute_name,
-            start_year: data.current_start_year,
-            end_year: data.current_end_year,
-            passing_grade: data.current_passing_grade
-        })
-        let reqData = {
-            educations: educations,
-            major_subjects: data.major_subject,
-            minor_subjects: data.minor_subject
-        }
-        console.log(reqData)
-        dispatch(registerPending())
-        let response = await registerEducationalDetails(reqData);
-        if (response.type == 'success') {
-            Alert.success('Yay! Added educational details Successfully')
-            dispatch(registerSuccess('/job-details'))
-        } else {
-            dispatch(registerFailure(response.message))
-        }
+    const handleSkip = () => {
+        dispatch(skip('/job-details'));
     }
 
     if (redirect) {
@@ -105,7 +88,7 @@ const EducationalDetails = (props) => {
             :
             <Panel shaded style={{ background: 'white' }}>
                 {show_form &&
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit(submitHandler)}>
                         {
                             error &&
                             <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
@@ -244,10 +227,10 @@ const EducationalDetails = (props) => {
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
                             <Col xs={24} sm={24} md={12}>
-                                <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
+                                <Button block onClick={handleSkip}> <b>Skip</b> </Button>
                             </Col>
                             <Col xs={24} sm={24} md={12}>
-                                <Button type="submit" block appearance="primary"> Submit </Button>
+                                <Button type="submit" block appearance="primary"> Next </Button>
                             </Col>
                         </Row>
                     </Form>
@@ -256,21 +239,26 @@ const EducationalDetails = (props) => {
                     <div>
                         <h4>Your Educations</h4>
                         <PanelGroup style={{ marginTop: 10 }} accordion bordered>
-                            {user_educations.map((education) => {
+                            {user_educations.map((education, index) => {
                                 return (
-                                    <Panel header={education.current_degree_name}>
+                                    <Panel key={index} header={education.current_degree_name}>
                                         <p>{education.current_start_year}</p>
                                     </Panel>
                                 )
                             })}
                         </PanelGroup>
-                        <Button onClick={toggleForm} style={{ marginTop: 10 }} appearance="primary"> Add More</Button>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={12}>
+                                <Button block onClick={toggleForm}> <b>Add More</b> </Button>
+                            </Col>
+                            <Col xs={24} sm={24} md={12}>
+                                <Button type="submit" block appearance="primary"> Submit </Button>
+                            </Col>
+                        </Row>
                     </div>
-
                 }
             </Panel>
     )
-
 }
 
 export default EducationalDetails;

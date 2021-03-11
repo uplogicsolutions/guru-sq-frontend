@@ -27,12 +27,16 @@ const registerSlice = createSlice({
         },
         registerPending: (state, action) => {
             state.loading = true
+        },
+        skip: (state, action) => {
+            state.redirectUrl= action.payload;
+            state.redirect = true;
         }
     }
 })
 
 const { reducer, actions } = registerSlice
 
-export const { resetRegisterStates, registerSuccess, registerFailure, registerPending } = actions;
+export const { resetRegisterStates, registerSuccess, registerFailure, registerPending, skip } = actions;
 
 export default reducer;
