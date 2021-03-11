@@ -13,7 +13,10 @@ const EducationalDetails = (props) => {
     const { control, errors, handleSubmit } = useForm();
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
+
     const [user_educations, setUserEducations] = useState([])
+    const [major_subjects, setMajorSubjects] = useState([])
+    const [minor_subjects, setMinorSubjects] = useState([])
 
     const [subjects, setSubjects] = useState([])
     const [grades, setGrades] = useState([])
@@ -36,35 +39,34 @@ const EducationalDetails = (props) => {
         loadOptions()
     }, [])
 
-    const submitHandler = async data => {
-        if (show_form) {
-            let education = {
-                degree_name: data.current_degree_name,
-                institute_name: data.current_institute_name,
-                start_year: data.current_start_year,
-                end_year: data.current_end_year,
-                passing_grade: data.current_passing_grade
-            }
-            console.log(education)
-            setUserEducations(user_educations => [...user_educations, education]);
-            setShowForm(false);
-            setShowAccordian(true);
-            console.log(user_educations)
-        } else if (show_accordian) {
-            let reqData = {
-                educations: user_educations,
-                major_subjects: data.major_subject,
-                minor_subjects: data.minor_subject
-            }
-            console.log(reqData)
-            // dispatch(registerPending())
-            // let response = await registerEducationalDetails(reqData);
-            // if (response.type == 'success') {
-            //     Alert.success('Yay! Added educational details Successfully')
-            //     dispatch(registerSuccess('/job-details'))
-            // } else {
-            //     dispatch(registerFailure(response.message))
-            // }
+    const addHandler = async data => {
+        let education = {
+            degree_name: data.current_degree_name,
+            institute_name: data.current_institute_name,
+            start_year: data.current_start_year,
+            end_year: data.current_end_year,
+            passing_grade: data.current_passing_grade
+        }
+        setUserEducations(prev_educations => [...prev_educations, education]);
+        setMajorSubjects(data.major_subject);
+        setMinorSubjects(data.minor_subject);
+        setShowForm(false);
+        setShowAccordian(true);
+    }
+
+    const submitHandler = async () => {
+        let reqData = {
+            educations: user_educations,
+            major_subjects: major_subjects,
+            minor_subjects: minor_subjects
+        }
+        dispatch(registerPending())
+        let response = await registerEducationalDetails(reqData);
+        if (response.type == 'success') {
+            Alert.success('Yay! Added educational details Successfully')
+            dispatch(registerSuccess('/job-details'))
+        } else {
+            dispatch(registerFailure(response.message))
         }
     }
 
@@ -88,7 +90,7 @@ const EducationalDetails = (props) => {
             :
             <Panel shaded style={{ background: 'white' }}>
                 {show_form &&
-                    <Form onSubmit={handleSubmit(submitHandler)}>
+                    <Form onSubmit={handleSubmit(addHandler)}>
                         {
                             error &&
                             <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
@@ -192,7 +194,7 @@ const EducationalDetails = (props) => {
                                     name="major_subject"
                                     control={control}
                                     rules={{ required: true }}
-                                    defaultValue=""
+                                    defaultValue={major_subjects}
                                     options={subjects}
                                     as={
                                         <TagPicker
@@ -210,7 +212,7 @@ const EducationalDetails = (props) => {
                                 <Controller
                                     name="minor_subject"
                                     control={control}
-                                    defaultValue=""
+                                    defaultValue={minor_subjects}
                                     // rules={{ required: true }}
                                     options={subjects}
                                     as={
@@ -239,20 +241,18 @@ const EducationalDetails = (props) => {
                     <div>
                         <h4>Your Educations</h4>
                         <PanelGroup style={{ marginTop: 10 }} accordion bordered>
-                            {user_educations.map((education, index) => {
-                                return (
-                                    <Panel key={index} header={education.current_degree_name}>
-                                        <p>{education.current_start_year}</p>
+                            {user_educations.map((education, index) => 
+                                    <Panel key={index} header={education.degree_name}>
+                                        <p>{education.start_year}</p>
                                     </Panel>
-                                )
-                            })}
+                            )}
                         </PanelGroup>
                         <Row style={{ marginTop: 15 }} className="show-grid">
                             <Col xs={24} sm={24} md={12}>
                                 <Button block onClick={toggleForm}> <b>Add More</b> </Button>
                             </Col>
                             <Col xs={24} sm={24} md={12}>
-                                <Button type="submit" block appearance="primary"> Submit </Button>
+                                <Button onClick={submitHandler} block appearance="primary"> Submit </Button>
                             </Col>
                         </Row>
                     </div>
