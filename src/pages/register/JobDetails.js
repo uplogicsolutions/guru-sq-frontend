@@ -14,22 +14,14 @@ const JobDetails = (props) => {
 
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
-    const [job_title, setJobTitile] = useState('')
-    const [age_group, setAgeGroup] = useState('')
-    const [core_subjects, setCoreSubjects] = useState([])
-    const [supplementary_subjects, setSupplementarySubjects] = useState([])
-    const [employer_type, setEmployerType] = useState('')
-    const [employer_name, setEmployerName] = useState('')
-    const [start_year, setStartYear] = useState('')
-    const [end_year, setEndYear] = useState('')
-    const [form_of_contract, setFormOfContract] = useState('')
-    const [description, setDescription] = useState('')
 
     const [isWorking, setIsWorking] = useState(false)
     const [jobs, setJobs] = useState([])
 
     const [subjectsData, setSubjectsData] = useState([])
     const [formOfContractsData, setFormOfContractsData] = useState([])
+    const [employerTypesData, setEmployerTypesData] = useState([])
+    const [ageGroupsData, setAgeGroupsData] = useState([])
 
     const { control, errors, register, handleSubmit, trigger } = useForm();
 
@@ -45,6 +37,24 @@ const JobDetails = (props) => {
         setSubjectsData(parseArrayOfObject(parseSubject, subjectData.data.data))
         let formData = await getOptions('formOfContracts')
         setFormOfContractsData(parseArrayOfObject(parseOption, formData.data.data))
+        let ageDataResponse = await getOptions('studentAgeGroups')
+        let ageData = []
+        ageDataResponse.data.data.map((value) => {
+            ageData.push({
+                label: `${value.start_age} - ${value.end_age}`,
+                value: value.group_id
+            })
+        })
+        setAgeGroupsData(ageData)
+        let employerDataResponse = await getOptions('employerTypes')
+        let employerData = []
+        employerDataResponse.data.data.map((value) => {
+            employerData.push({
+                label: value,
+                value: value
+            })
+        })
+        setEmployerTypesData(employerData)
     }
 
     useEffect(() => {
@@ -52,22 +62,8 @@ const JobDetails = (props) => {
         loadOptions()
     }, [])
 
-
-    const test = [
-        {
-            "label": "Private",
-            "value": "private",
-            "role": ""
-        },
-        {
-            "label": "Goverment",
-            "value": "goverment",
-            "role": ""
-        }
-    ]
-
     const handleAdd = (data) => {
-
+        console.log(data)
         setJobs(prevState => [
             ...prevState,
             data
@@ -121,12 +117,12 @@ const JobDetails = (props) => {
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
-                                options={test}
+                                options={ageGroupsData}
                                 as={<InputPicker
                                     name="age_group"
                                     block
                                     placeholder="Age group of students"
-                                    data={test} />
+                                    data={ageGroupsData} />
                                 }
                             />
                             {errors.age_group?.type === 'required' && <Danger>* Required</Danger>}
@@ -139,13 +135,13 @@ const JobDetails = (props) => {
                                 control={control}
                                 rules={{ required: true }}
                                 defaultValue=""
-                                options={test}
+                                options={subjectsData}
                                 as={
                                     <TagPicker
                                         name="core_subjects"
                                         block
                                         placeholder="Core Subject"
-                                        data={test} />
+                                        data={subjectsData} />
                                 }
                             />
                             {errors.core_subjects?.type === 'required' && <Danger>* Required</Danger>}
@@ -158,13 +154,13 @@ const JobDetails = (props) => {
                                 name="supplementary_subjects"
                                 control={control}
                                 defaultValue=""
-                                options={test}
+                                options={subjectsData}
                                 as={
                                     <TagPicker
                                         name="supplementary_subjects"
                                         block
                                         placeholder="Supplementary Subject"
-                                        data={test}
+                                        data={subjectsData}
                                     />
                                 }
                             />
@@ -178,12 +174,12 @@ const JobDetails = (props) => {
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
-                                options={test}
+                                options={employerTypesData}
                                 as={<InputPicker
                                     name="employer_type"
                                     block
                                     placeholder="Employer Type"
-                                    data={test} />
+                                    data={employerTypesData} />
                                 }
                             />
                             {errors.employer_type?.type === 'required' && <Danger>* Required</Danger>}
@@ -260,12 +256,12 @@ const JobDetails = (props) => {
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
-                                options={test}
+                                options={formOfContractsData}
                                 as={<InputPicker
                                     name="form_of_contract"
                                     block
                                     placeholder="Form of Contract"
-                                    data={test} />
+                                    data={formOfContractsData} />
                                 }
                             />
                             {errors.form_of_contract?.type === 'required' && <Danger>* Required</Danger>}
