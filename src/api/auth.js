@@ -77,6 +77,18 @@ export const registerEducationalDetails = async (data) => {
     return failureResponse()
 }
 
+export const registerProfessionalDetails = async (data) => {
+    try {
+        const response = await api.post('/user/user-professional-details', data);
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.status == 400) {
+            return failureResponse(error.response.data.message)
+        }
+    }
+    return failureResponse()
+}
+
 export const checkUser = async () => {
     try {
         const response = await api.get('/auth/check');
