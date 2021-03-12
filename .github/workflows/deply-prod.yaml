@@ -1,0 +1,32 @@
+name: deploy-prod
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: |
+        cp .env.prod .env
+        rm .env.*
+    - run: npm install
+    - run: CI=false npm run build      
+    - run: ls -a
+    - uses: horochx/deploy-via-scp@master
+      with:
+        local: build/*
+        remote: ${{ secrets.REMOTE_DIR }}
+        host: ${{ secrets.HOSTNAME }}
+        port: ${{ secrets.PORT }}
+        user: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PASSWORD }}
