@@ -52,11 +52,12 @@ const authSlice = createSlice({
             if (action.payload.type == 'success' && action.payload.data.isLoggedIn) {
                 state.user = action.payload.data.user;
                 state.loggedIn = true;
-                state.redirect = true;
-                state.redirectUrl = action.payload.data.redirectUrl;
+                if (action.payload.data.redirectUrl != '/landing') {
+                    state.redirect = true;
+                    state.redirectUrl = action.payload.data.redirectUrl;
+                }
             } else {
                 state.error = action.payload.message;
-                state.redirect = true;
                 state.redirectUrl = '/landing';
             }
         },

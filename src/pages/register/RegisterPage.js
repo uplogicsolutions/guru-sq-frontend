@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, FormGroup, Panel, Loader, Input, Alert } from 'rsuite'
 import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
 import { register } from 'api/auth';
+import { setLoggedIn } from 'auth/store';
 
 //Form Validation
 import { useForm, Controller } from "react-hook-form";
@@ -43,6 +44,7 @@ const RegisterPage = (props) => {
     }
 
     if(redirect) {
+        dispatch(setLoggedIn(true));
         props.history.push(redirectUrl);
     }
 
