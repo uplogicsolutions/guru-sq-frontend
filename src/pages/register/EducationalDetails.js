@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Panel, Row, Col, Form, InputPicker, Button, Input, InputNumber, PanelGroup, TagPicker, Loader, Alert } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
-import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
+import { resetRegisterStates, registerSuccess, registerFailure, registerPending, skip } from 'pages/register/store/registerSlice'
 import { registerEducationalDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
@@ -11,18 +11,12 @@ import Danger from 'components/alerts/Danger';
 
 const EducationalDetails = (props) => {
     const { control, errors, handleSubmit } = useForm();
-
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
-    const [user_educations, setUserEducations] = useState([])
-    const [major_subject, setMajorSubject] = useState([])
-    const [minor_subject, setMinorSubject] = useState([])
 
-    const [current_degree_name, setCurrentDegreeName] = useState('')
-    const [current_institute_name, setCurrentInstituteName] = useState('')
-    const [current_start_year, setCurrentStartYear] = useState('')
-    const [current_end_year, setCurrentEndYear] = useState('')
-    const [current_passing_grade, setCurrentPassingGrade] = useState('')
+    const [user_educations, setUserEducations] = useState([])
+    const [major_subjects, setMajorSubjects] = useState([])
+    const [minor_subjects, setMinorSubjects] = useState([])
 
     const [subjects, setSubjects] = useState([])
     const [grades, setGrades] = useState([])
@@ -45,45 +39,27 @@ const EducationalDetails = (props) => {
         loadOptions()
     }, [])
 
-    const handleAdd = () => {
-        const data = {
-            current_degree_name,
-            current_institute_name,
-            current_start_year,
-            current_end_year,
-            current_passing_grade,
-            major_subject,
-            minor_subject
-        }
-        //TODO Add api call
-        // educations.push(data);
-        console.log(data)
-        setShowForm(false);
-        setShowAccordian(true);
-
-        // console.log(educations);
-    }
-
-    const toggleForm = () => {
-        setShowAccordian(!show_accordian);
-        setShowForm(!show_form);
-    }
-
-    const onSubmit = async data => {
-        let educations = [...user_educations]
-        educations.push({
+    const addHandler = async data => {
+        let education = {
             degree_name: data.current_degree_name,
             institute_name: data.current_institute_name,
             start_year: data.current_start_year,
             end_year: data.current_end_year,
             passing_grade: data.current_passing_grade
-        })
-        let reqData = {
-            educations: educations,
-            major_subjects: data.major_subject,
-            minor_subjects: data.minor_subject
         }
-        console.log(reqData)
+        setUserEducations(prev_educations => [...prev_educations, education]);
+        setMajorSubjects(data.major_subject);
+        setMinorSubjects(data.minor_subject);
+        setShowForm(false);
+        setShowAccordian(true);
+    }
+
+    const submitHandler = async () => {
+        let reqData = {
+            educations: user_educations,
+            major_subjects: major_subjects,
+            minor_subjects: minor_subjects
+        }
         dispatch(registerPending())
         let response = await registerEducationalDetails(reqData);
         if (response.type == 'success') {
@@ -92,6 +68,15 @@ const EducationalDetails = (props) => {
         } else {
             dispatch(registerFailure(response.message))
         }
+    }
+
+    const toggleForm = () => {
+        setShowAccordian(!show_accordian);
+        setShowForm(!show_form);
+    }
+
+    const handleSkip = () => {
+        dispatch(skip('/job-details'));
     }
 
     if (redirect) {
@@ -105,7 +90,7 @@ const EducationalDetails = (props) => {
             :
             <Panel shaded style={{ background: 'white' }}>
                 {show_form &&
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit(addHandler)}>
                         {
                             error &&
                             <p style={{ color: 'red', textAlign: 'center', paddingBottom: '15px' }}>{error}</p>
@@ -209,7 +194,7 @@ const EducationalDetails = (props) => {
                                     name="major_subject"
                                     control={control}
                                     rules={{ required: true }}
-                                    defaultValue=""
+                                    defaultValue={major_subjects}
                                     options={subjects}
                                     as={
                                         <TagPicker
@@ -227,7 +212,7 @@ const EducationalDetails = (props) => {
                                 <Controller
                                     name="minor_subject"
                                     control={control}
-                                    defaultValue=""
+                                    defaultValue={minor_subjects}
                                     // rules={{ required: true }}
                                     options={subjects}
                                     as={
@@ -244,10 +229,10 @@ const EducationalDetails = (props) => {
                         </Row>
                         <Row style={{ marginTop: 15 }} className="show-grid">
                             <Col xs={24} sm={24} md={12}>
-                                <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
+                                <Button block onClick={handleSkip}> <b>Skip</b> </Button>
                             </Col>
                             <Col xs={24} sm={24} md={12}>
-                                <Button type="submit" block appearance="primary"> Submit </Button>
+                                <Button type="submit" block appearance="primary"> Next </Button>
                             </Col>
                         </Row>
                     </Form>
@@ -256,21 +241,24 @@ const EducationalDetails = (props) => {
                     <div>
                         <h4>Your Educations</h4>
                         <PanelGroup style={{ marginTop: 10 }} accordion bordered>
-                            {user_educations.map((education) => {
-                                return (
-                                    <Panel header={education.current_degree_name}>
-                                        <p>{education.current_start_year}</p>
+                            {user_educations.map((education, index) => 
+                                    <Panel key={index} header={education.degree_name}>
+                                        <p>{education.start_year}</p>
                                     </Panel>
-                                )
-                            })}
+                            )}
                         </PanelGroup>
-                        <Button onClick={toggleForm} style={{ marginTop: 10 }} appearance="primary"> Add More</Button>
+                        <Row style={{ marginTop: 15 }} className="show-grid">
+                            <Col xs={24} sm={24} md={12}>
+                                <Button block onClick={toggleForm}> <b>Add More</b> </Button>
+                            </Col>
+                            <Col xs={24} sm={24} md={12}>
+                                <Button onClick={submitHandler} block appearance="primary"> Submit </Button>
+                            </Col>
+                        </Row>
                     </div>
-
                 }
             </Panel>
     )
-
 }
 
 export default EducationalDetails;

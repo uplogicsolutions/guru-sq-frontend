@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, Row, Col, Form, InputPicker, Button, Input, Icon, IconButton, DatePicker, InputNumber, PanelGroup, TagPicker, Checkbox } from 'rsuite';
+import { Panel, Row, Col, Form, InputPicker, Button, Input, Alert, InputNumber, PanelGroup, TagPicker, Checkbox } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
 import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
-import { registerSchoolDetails } from 'api/auth';
+import { registerProfessionalDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
 
@@ -14,22 +14,18 @@ const JobDetails = (props) => {
 
     const [show_form, setShowForm] = useState(true);
     const [show_accordian, setShowAccordian] = useState(false);
-    const [job_title, setJobTitile] = useState('')
-    const [age_group, setAgeGroup] = useState('')
-    const [core_subjects, setCoreSubjects] = useState([])
-    const [supplementary_subjects, setSupplementarySubjects] = useState([])
-    const [employer_type, setEmployerType] = useState('')
-    const [employer_name, setEmployerName] = useState('')
-    const [start_year, setStartYear] = useState('')
-    const [end_year, setEndYear] = useState('')
-    const [form_of_contract, setFormOfContract] = useState('')
-    const [description, setDescription] = useState('')
 
     const [isWorking, setIsWorking] = useState(false)
-    const [jobs, setJobs] = useState([])
 
     const [subjectsData, setSubjectsData] = useState([])
     const [formOfContractsData, setFormOfContractsData] = useState([])
+    const [employerTypesData, setEmployerTypesData] = useState([])
+    const [ageGroupsData, setAgeGroupsData] = useState([])
+
+    const [coreSubjects, setCoreSubjects] = useState([])
+    const [supplementarySubjects, setSupplementarySubjects] = useState([])
+    const [ageGroups, setAgeGroups] = useState([])
+    const [jobs, setJobs] = useState([])
 
     const { control, errors, register, handleSubmit, trigger } = useForm();
 
@@ -45,6 +41,24 @@ const JobDetails = (props) => {
         setSubjectsData(parseArrayOfObject(parseSubject, subjectData.data.data))
         let formData = await getOptions('formOfContracts')
         setFormOfContractsData(parseArrayOfObject(parseOption, formData.data.data))
+        let ageDataResponse = await getOptions('studentAgeGroups')
+        let ageData = []
+        ageDataResponse.data.data.map((value) => {
+            ageData.push({
+                label: `${value.start_age} - ${value.end_age}`,
+                value: value.group_id
+            })
+        })
+        setAgeGroupsData(ageData)
+        let employerDataResponse = await getOptions('employerTypes')
+        let employerData = []
+        employerDataResponse.data.data.map((value) => {
+            employerData.push({
+                label: value,
+                value: value
+            })
+        })
+        setEmployerTypesData(employerData)
     }
 
     useEffect(() => {
@@ -52,30 +66,23 @@ const JobDetails = (props) => {
         loadOptions()
     }, [])
 
-
-    const test = [
-        {
-            "label": "Private",
-            "value": "private",
-            "role": ""
-        },
-        {
-            "label": "Goverment",
-            "value": "goverment",
-            "role": ""
-        }
-    ]
-
     const handleAdd = (data) => {
-
+        console.log(data)
         setJobs(prevState => [
-            ...prevState,
-            data
+            ...prevState, {
+                job_title: data.job_title,
+                is_class_teacher: true,
+                employed_by: data.employer_type,
+                educational_institute_name: '',
+                educational_institute_location: '',
+                description: data.description
+            }
         ])
+        setCoreSubjects(data.core_subjects)
+        setSupplementarySubjects(data.supplementary_subjects)
+        setAgeGroups(data.age_group)
         setShowForm(false);
         setShowAccordian(true);
-
-        // console.log(educations);
     }
 
     const toggleForm = () => {
@@ -83,9 +90,24 @@ const JobDetails = (props) => {
         setShowForm(!show_form);
     }
 
-    const handleOnSubmit = data => {
-        console.log(jobs)
+    const handleOnSubmit = async data => {
+        let reqData = {
+            jobs: jobs,
+            selected_age_groups: ageGroups,
+            core_subjects: coreSubjects,
+            supplementary_subjects: supplementarySubjects
+        }
+        console.log(reqData)
+        dispatch(registerPending())
+        let response = await registerProfessionalDetails(reqData);
+        if (response.type == 'success') {
+            Alert.success('Yay! Added educational details Successfully')
+            dispatch(registerSuccess('/home'))
+        } else {
+            dispatch(registerFailure(response.message))
+        }
     }
+
     if (redirect) {
         props.history.push(redirectUrl);
     }
@@ -117,73 +139,16 @@ const JobDetails = (props) => {
                     <Row style={{ marginTop: 15 }}>
                         <Col xs={24} sm={24} md={24}>
                             <Controller
-                                name="age_group"
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: true }}
-                                options={test}
-                                as={<InputPicker
-                                    name="age_group"
-                                    block
-                                    placeholder="Age group of students"
-                                    data={test} />
-                                }
-                            />
-                            {errors.age_group?.type === 'required' && <Danger>* Required</Danger>}
-                        </Col>
-                    </Row>
-                    <Row style={{ marginTop: 15 }}>
-                        <Col xs={24} sm={24} md={24}>
-                            <Controller
-                                name="core_subjects"
-                                control={control}
-                                rules={{ required: true }}
-                                defaultValue=""
-                                options={test}
-                                as={
-                                    <TagPicker
-                                        name="core_subjects"
-                                        block
-                                        placeholder="Core Subject"
-                                        data={test} />
-                                }
-                            />
-                            {errors.core_subjects?.type === 'required' && <Danger>* Required</Danger>}
-                        </Col>
-                    </Row>
-
-                    <Row style={{ marginTop: 15 }}>
-                        <Col xs={24} sm={24} md={24}>
-                            <Controller
-                                name="supplementary_subjects"
-                                control={control}
-                                defaultValue=""
-                                options={test}
-                                as={
-                                    <TagPicker
-                                        name="supplementary_subjects"
-                                        block
-                                        placeholder="Supplementary Subject"
-                                        data={test}
-                                    />
-                                }
-                            />
-                        </Col>
-                    </Row>
-
-                    <Row style={{ marginTop: 15 }}>
-                        <Col xs={24} sm={24} md={24}>
-                            <Controller
                                 name="employer_type"
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
-                                options={test}
+                                options={employerTypesData}
                                 as={<InputPicker
                                     name="employer_type"
                                     block
                                     placeholder="Employer Type"
-                                    data={test} />
+                                    data={employerTypesData} />
                                 }
                             />
                             {errors.employer_type?.type === 'required' && <Danger>* Required</Danger>}
@@ -260,12 +225,12 @@ const JobDetails = (props) => {
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
-                                options={test}
+                                options={formOfContractsData}
                                 as={<InputPicker
                                     name="form_of_contract"
                                     block
                                     placeholder="Form of Contract"
-                                    data={test} />
+                                    data={formOfContractsData} />
                                 }
                             />
                             {errors.form_of_contract?.type === 'required' && <Danger>* Required</Danger>}
@@ -285,6 +250,61 @@ const JobDetails = (props) => {
                                         onChange={(text, e) => onChange(e)}
                                         value={value}
                                         placeholder="Description (Optional)" />
+                                }
+                            />
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: 15 }}>
+                        <Col xs={24} sm={24} md={24}>
+                            <Controller
+                                name="age_group"
+                                control={control}
+                                defaultValue={ageGroups}
+                                rules={{ required: true }}
+                                options={ageGroupsData}
+                                as={<TagPicker
+                                    name="age_group"
+                                    block
+                                    placeholder="Age group of students"
+                                    data={ageGroupsData} />
+                                }
+                            />
+                            {errors.age_group?.type === 'required' && <Danger>* Required</Danger>}
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: 15 }}>
+                        <Col xs={24} sm={24} md={24}>
+                            <Controller
+                                name="core_subjects"
+                                control={control}
+                                rules={{ required: true }}
+                                defaultValue={coreSubjects}
+                                options={subjectsData}
+                                as={
+                                    <TagPicker
+                                        name="core_subjects"
+                                        block
+                                        placeholder="Core Subject"
+                                        data={subjectsData} />
+                                }
+                            />
+                            {errors.core_subjects?.type === 'required' && <Danger>* Required</Danger>}
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: 15 }}>
+                        <Col xs={24} sm={24} md={24}>
+                            <Controller
+                                name="supplementary_subjects"
+                                control={control}
+                                defaultValue={supplementarySubjects}
+                                options={subjectsData}
+                                as={
+                                    <TagPicker
+                                        name="supplementary_subjects"
+                                        block
+                                        placeholder="Supplementary Subject"
+                                        data={subjectsData}
+                                    />
                                 }
                             />
                         </Col>
