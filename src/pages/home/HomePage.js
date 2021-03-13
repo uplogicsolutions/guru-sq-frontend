@@ -26,6 +26,7 @@ import {
 } from "react-icons/fa";
 import ButtonCard from "components/buttonCard/ButtonCard";
 import { useState } from 'react/cjs/react.development';
+import { getAuth } from 'auth/store';
 
 const username = "Jhon";
 
@@ -39,6 +40,7 @@ const Homepage = () => {
     const { loading, posts, error } = useSelector(state => state.post)
 
     useEffect(() => {
+        dispatch(getAuth())
         dispatch(loadPosts())
     }, [])
 

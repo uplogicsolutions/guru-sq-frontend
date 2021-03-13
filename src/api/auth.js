@@ -101,3 +101,15 @@ export const checkUser = async () => {
     }
     return failureResponse()
 }
+
+export const getUser = async () => {
+    try {
+        const response = await axios.get('/auth/get', getConfig());
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.status >= 400 && error.response.status < 500) {
+            return failureResponse(error.response.data.message)
+        }
+    }
+    return failureResponse()
+}

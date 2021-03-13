@@ -1,11 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-import { checkUser } from 'api/auth'
+import { checkUser, getUser } from 'api/auth'
 
 export const checkAuth = createAsyncThunk(
     'auth/check',
     async (_data, { getState, dispatch }) => {
         return checkUser()
+            .then((response) => {
+                return response;
+            })
+            .catch((error) => {
+                return error;
+            });
+    }
+);
+
+export const getAuth = createAsyncThunk(
+    'auth/get',
+    async (_data, { getState, dispatch }) => {
+        return getUser()
             .then((response) => {
                 return response;
             })
@@ -66,7 +79,13 @@ const authSlice = createSlice({
             state.error = action.payload;
             state.redirect = true;
             state.redirectUrl = '/landing';
-        }
+        },
+        [getAuth.fulfilled]: (state, action) => {
+            state.loading = false;
+            if (action.payload.type == 'success' && action.payload.data) {
+                state.user = action.payload.data.user;
+            }
+        },
     }
 })
 
