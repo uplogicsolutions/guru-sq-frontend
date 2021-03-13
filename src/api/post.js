@@ -1,8 +1,9 @@
-import { api, successResponse, failureResponse } from 'utils/api'
+import { getConfig, successResponse, failureResponse } from 'utils/api'
+import axios from 'axios'
 
 export const get = async () => {
     try {
-        const response = await api.get(`${process.env.REACT_APP_SERVER_URL}/post/all`);
+        const response = await axios.get(`/post/all`, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.code == 400) {
@@ -14,7 +15,7 @@ export const get = async () => {
 
 export const like = async (data) => {
   try {
-      const response = await api.post(`${process.env.REACT_APP_SERVER_URL}/post/like`, data);
+      const response = await axios.post(`/post/like`, data, getConfig());
       return successResponse(response.data);
   } catch (error) {
       if (error.response && error.response.code == 400) {
@@ -26,7 +27,7 @@ export const like = async (data) => {
 
 export const comment = async (data) => {
   try {
-      const response = await api.post(`${process.env.REACT_APP_SERVER_URL}/post/comment`, data);
+      const response = await axios.post(`/post/comment`, data, getConfig());
       return successResponse(response.data);
   } catch (error) {
       if (error.response && error.response.code == 400) {
@@ -38,7 +39,7 @@ export const comment = async (data) => {
 
 export const add = async (data) => {
     try {
-        const response = await api.post(`${process.env.REACT_APP_SERVER_URL}/post/add`, data);
+        const response = await axios.post(`/post/add`, data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.code == 400) {

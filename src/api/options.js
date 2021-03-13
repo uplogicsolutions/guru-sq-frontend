@@ -1,15 +1,9 @@
-import { api, successResponse, failureResponse } from 'utils/api'
+import { getConfig, successResponse, failureResponse } from 'utils/api'
 import axios from 'axios'
 
 export const getOptions = async (type) => {
     try {
-        const token = localStorage.getItem('token');
-        const config = {
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        }
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/options?type=${type}`, config);
+        const response = await axios.get(`/options?type=${type}`, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.code == 400) {

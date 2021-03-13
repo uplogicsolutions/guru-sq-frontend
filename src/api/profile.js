@@ -1,8 +1,9 @@
-import { api, successResponse, failureResponse } from 'utils/api'
+import { getConfig, successResponse, failureResponse } from 'utils/api'
+import axios from 'axios'
 
 export const getProfile = async () => {
   try {
-    const response = await api.get('/user-profile');
+    const response = await axios.get('/user-profile', getConfig());
     return successResponse(response.data);
   } catch (error) {
     if (error.response && error.response.status == 400) {
@@ -14,7 +15,7 @@ export const getProfile = async () => {
 
 export const editProfile = async (url, data) => {
   try {
-    const response = await api.put(url, data);
+    const response = await axios.put(url, data, getConfig());
     return successResponse(response.data);
   } catch (error) {
     if (error.response && error.response.status == 400) {

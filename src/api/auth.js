@@ -1,8 +1,9 @@
-import { api, successResponse, failureResponse } from 'utils/api'
+import { getConfig, successResponse, failureResponse } from 'utils/api'
+import axios from 'axios'
 
 export const login = async (data) => {
     try {
-        const response = await api.post('/auth/signin', data);
+        const response = await axios.post('/auth/signin', data, getConfig());
         localStorage.removeItem('token');
         localStorage.setItem('token', response.data.token);
         return successResponse(response.data);
@@ -16,7 +17,7 @@ export const login = async (data) => {
 
 export const register = async (data) => {
     try {
-        const response = await api.post('/auth/signup', data);
+        const response = await axios.post('/auth/signup', data, getConfig());
         localStorage.removeItem('token');
         localStorage.setItem('token', response.data.token);
         return successResponse(response.data);
@@ -31,7 +32,7 @@ export const register = async (data) => {
 
 export const registerPersonalDetails = async (data) => {
     try {
-        const response = await api.post('/user/user-personal-details', data);
+        const response = await axios.post('/user/user-personal-details', data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
@@ -43,7 +44,7 @@ export const registerPersonalDetails = async (data) => {
 
 export const registerSchoolDetails = async (data) => {
     try {
-        const response = await api.post('/user/user-school-details', data);
+        const response = await axios.post('/user/user-school-details', data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
@@ -55,7 +56,7 @@ export const registerSchoolDetails = async (data) => {
 
 export const registerSubjectDetails = async (data) => {
     try {
-        const response = await api.post('/user/user-subjects', data);
+        const response = await axios.post('/user/user-subjects', data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
@@ -67,7 +68,7 @@ export const registerSubjectDetails = async (data) => {
 
 export const registerEducationalDetails = async (data) => {
     try {
-        const response = await api.post('/user/user-education-history', data);
+        const response = await axios.post('/user/user-education-history', data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
@@ -79,7 +80,7 @@ export const registerEducationalDetails = async (data) => {
 
 export const registerProfessionalDetails = async (data) => {
     try {
-        const response = await api.post('/user/user-professional-details', data);
+        const response = await axios.post('/user/user-professional-details', data, getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status == 400) {
@@ -91,7 +92,7 @@ export const registerProfessionalDetails = async (data) => {
 
 export const checkUser = async () => {
     try {
-        const response = await api.get('/auth/check');
+        const response = await axios.get('/auth/check', getConfig());
         return successResponse(response.data);
     } catch (error) {
         if (error.response && error.response.status >= 400 && error.response.status < 500) {
