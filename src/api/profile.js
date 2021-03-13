@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const getProfile = async () => {
   try {
-    const response = await axios.get('/user-profile', getConfig());
+    const response = await axios.get('/user/profile', getConfig());
     return successResponse(response.data);
   } catch (error) {
     if (error.response && error.response.status == 400) {
