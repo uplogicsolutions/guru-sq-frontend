@@ -8,6 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 
 //Custom Components
 import Danger from 'components/alerts/Danger';
+import { setLoggedIn } from 'auth/store';
 
 const LoginPage = (props) => {
     const { control, errors , handleSubmit } = useForm();
@@ -29,6 +30,7 @@ const LoginPage = (props) => {
     }
 
     if(redirect) {
+        dispatch(setLoggedIn(true));
         props.history.push(redirectUrl);
     }
 

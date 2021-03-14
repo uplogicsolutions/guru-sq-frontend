@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import {useHistory} from 'react-router-dom';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { loadPosts, likePost, commentPost } from './store';
 import UserPost from "components/userpost/UserPost";
@@ -12,7 +14,8 @@ import {
     Col,
     Panel,
     Input,
-    InputGroup
+    InputGroup,
+    Button
 } from "rsuite";
 import {
     FaImage,
@@ -38,6 +41,7 @@ const Homepage = () => {
     const handleClose = () => setShowNewPostModal(false);
     const dispatch = useDispatch()
     const { loading, posts, error } = useSelector(state => state.post)
+    const {push} = useHistory()
 
     useEffect(() => {
         dispatch(getAuth())
@@ -75,7 +79,7 @@ const Homepage = () => {
                 <Row>
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
-
+                            <Button onClick={() => push('/profile')}>ProfilePage</Button>
                         </Panel>
                     </Col>
                     <Col xs={24} md={14}>
