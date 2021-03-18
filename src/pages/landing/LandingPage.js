@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Logo from 'assets/gurusq.png';
 import Sqaure from 'assets/gradient50.png';
 import Landing from 'assets/landing.mp4'
-import { Button, Col, Input, Row } from 'rsuite';
-import { checkAuth } from 'auth/store';
+import { Button, Col, Input, Row, Alert } from 'rsuite';
+import { checkAuth, setLoading, setRedirect, setRedirectUrl, setLoggedIn } from 'auth/store';
+import { register } from 'api/auth';
 
 const LandingPage = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const { loading, redirect, redirectUrl } = useSelector((state) => state.auth);
     const history = useHistory();
     const dispatch = useDispatch();
@@ -18,6 +21,20 @@ const LandingPage = () => {
 
     if (redirect) {
         history.push(redirectUrl)
+    }
+
+    const handleRegister = async () => {
+        dispatch(setLoading(true));
+        let response = await register({username, password});
+        dispatch(setLoading(false))
+        if(response.type == 'success') {
+            Alert.success('Yay! Registration Successfull');
+            dispatch(setLoggedIn(true));
+            dispatch(setRedirectUrl('/personal-details'));
+            dispatch(setRedirect(true));
+        } else {
+            Alert.error(response.message);
+        }
     }
 
     return (
@@ -34,15 +51,15 @@ const LandingPage = () => {
                 <div style={{ position: 'relative' }} className="flex flex-col">
                     <Row className="p-5 mt-3">
                         <Col xs={24} md={8}>
-                            <Input className="" placeholder="Username" />
+                            <Input name="username" className="" value={username} onChange={(val) => setUsername(val)} placeholder="Username" />
                         </Col>
                         <Col xs={24} md={8}>
-                            <Input className="" placeholder="Password" type="password" />
+                            <Input name="password" className="" value={password} onChange={(val) => setPassword(val)} placeholder="Password" type="password" />
                         </Col>
                         <Col xs={24} md={8}>
                             <div className="flex flex-col">
-                                <Button appearance="primary" className="">Register</Button>
-                                <a className="self-center">Already registered? Login</a>
+                                <Button appearance="primary" className="" onClick={handleRegister}>Register</Button>
+                                <a className="self-center" style={{cursor: "pointer"}} onClick={() => history.push('/login')}>Already registered? Login</a>
                             </div>
                         </Col>
 
