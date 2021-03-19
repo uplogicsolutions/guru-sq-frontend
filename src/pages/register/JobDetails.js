@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, Row, Col, Form, InputPicker, Button, Input, Alert, InputNumber, PanelGroup, TagPicker, Checkbox } from 'rsuite';
+import { 
+    Panel, 
+    Row, 
+    Col, 
+    Form, 
+    InputPicker, 
+    Button, 
+    Input, 
+    Alert, 
+    InputNumber, 
+    PanelGroup, 
+    TagPicker, 
+    Checkbox 
+} from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
 import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
 import { registerProfessionalDetails } from 'api/auth';

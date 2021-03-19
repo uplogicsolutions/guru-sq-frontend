@@ -10,7 +10,7 @@ import './style.css'
 
 const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
     return (
-        <Navbar appearance="inverse" {...props}>
+        <Navbar style={{background:'white'}} {...props}>
       <Navbar.Header>
         <a href="/home" className="navbar-brand logo">
           GURU Sq

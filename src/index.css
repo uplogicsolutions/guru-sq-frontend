@@ -6,3 +6,20 @@ body {
   }
 }
 
+
+h1 {
+  color: #443203 !important;
+}
+
+.g-primary-color {
+  color: #B38F3A !important;
+}
+
+.g-primary-color-dark {
+  color: #957022 !important;
+}
+
+p .p-bold {
+  color: #443203 !important;
+}
+

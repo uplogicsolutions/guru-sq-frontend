@@ -6,7 +6,7 @@ module.exports = override(
     
       javascriptEnabled: true,
       modifyVars: { 
-        '@base-color': '#002147',
+        '@base-color': '#B38F3A',
         }
     
   })
