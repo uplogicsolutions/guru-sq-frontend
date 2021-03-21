@@ -11,13 +11,10 @@ import test from 'pages/test/test';
 import LandingPage from 'pages/landing/LandingPage';
 import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
-
-import socketClient  from "socket.io-client";
-const SERVER = "http://127.0.0.1:8004";
+import socket from './socket';
 
 const App = () => {
   const { loggedIn } = useSelector((state) => state.auth);
-  var socket = socketClient (SERVER);
 
   socket.on('message', (message) => console.log(message))
 
