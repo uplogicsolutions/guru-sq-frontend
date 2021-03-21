@@ -21,9 +21,6 @@ import {
     FaImage,
     FaVideo,
     FaListUl,
-    FaCamera,
-    FaAudible,
-    FaSpeakerDeck,
     FaMusic
 
 } from "react-icons/fa";
@@ -70,6 +67,7 @@ const Homepage = () => {
 
     return (
         <BasePage>
+            
             <Grid fluid style={{ paddingTop: 12, background: '#f3f2ef' }}>
                 <Row>
                     <Col xs={20} md={18}>
@@ -120,7 +118,9 @@ const Homepage = () => {
                         {/* User Post's */}
                         {
                             posts.map( (post, index) =>
-                                <UserPost key={index} post={post} handleLike={handleLike} />)
+                                <UserPost key={index} post={post} handleLike={handleLike} />
+                            )
+
                         }
                     </Col>
                     <Col xsHidden md={5} />
