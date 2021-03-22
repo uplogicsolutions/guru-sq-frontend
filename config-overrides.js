@@ -6,6 +6,7 @@ module.exports = override(
     javascriptEnabled: true,
     modifyVars: {
       '@base-color': '#B38F3A',
+      '@border-radius-base': '0px',
       // '@panel-padding' : '12px'
     }
   }),

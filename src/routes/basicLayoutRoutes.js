@@ -1,6 +1,7 @@
 import LandingPage from 'pages/landing/LandingPage'
 import Homepage from 'pages/home/HomePage'
 import ProfilePage from 'pages/profile/ProfilePage'
+import NotificationPage from 'pages/notifications/NotificationsPage'
 
 export const routes = [
     {
@@ -15,5 +16,9 @@ export const routes = [
     {
         path: '/profile',
         component: ProfilePage
+    },
+    {
+        path: '/notifications',
+        component: NotificationPage
     }
 ]

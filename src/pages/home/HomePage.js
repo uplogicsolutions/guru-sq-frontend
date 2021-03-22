@@ -78,6 +78,7 @@ const Homepage = () => {
                     <Col xsHidden md={5}>
                         <Panel bordered header="Summary">
                             <Button onClick={() => push('/profile')}>ProfilePage</Button>
+                            <Button onClick={() => push('/notifications')}>Notifications</Button>
                         </Panel>
                     </Col>
                     <Col xs={24} md={14}>
