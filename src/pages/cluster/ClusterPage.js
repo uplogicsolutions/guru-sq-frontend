@@ -2,6 +2,7 @@ import UserCard from "components/userCard/UserCard";
 import BasePage from "pages/base/BasePage";
 import React from "react";
 import { Col, Grid, Panel, Row } from "rsuite";
+import ChatPage from "./ChatPage";
 
 const Tabs = ({ color }) => {
 
@@ -19,20 +20,20 @@ const Tabs = ({ color }) => {
     ]
     return (
         <BasePage>
-            <Grid className="px-5" fluid>
-                <Row>
+            <Grid className=" px-2 md:px-5 h-screen" style={{maxHeight:'100vh'}} fluid>
+                <Row className="h-full">
                     <Col className="border my-2 p-2 h-30" xsHidden md={6}>
                         <img
                             className=""
                             src="http://mediatreeglobal.com//assets/img/business/advertiser.png"
                         />
                     </Col>
-                    <Col className="my-2" xs={24} md={18}>
-                        <Panel className="m-0 p-0" bordered>
+                    <Col className="my-2 flex flex-col h-full" xs={24} md={18}>
+                        <Panel className="m-0 mb-2 p-0 flex-shrink-0" bordered>
                             <p className="font-semibold g-primary-color">ClusterName</p>
                         </Panel>
-                        <Panel header={<p className="font-semibold g-primary-color">Users</p>} collapsible bordered>
-                            <div className="flex flex-row flex-wrap">
+                        <Panel className="mb-2 flex-shrink-0" header={<p className="font-semibold g-primary-color">Users</p>} collapsible bordered>
+                            <div className="flex justify-center flex-row flex-wrap">
                                 {Users.map((user, index) => (
                                     <div className="w-full md:w-1/4 py-2">
                                         <UserCard key={index} user_name={user.user_name} />
@@ -40,6 +41,9 @@ const Tabs = ({ color }) => {
                                 ))}
                             </div>
                         </Panel>
+                        <div className="flex-grow border" bordered>
+                            <ChatPage />
+                        </div>
                     </Col>
                 </Row>
             </Grid>
