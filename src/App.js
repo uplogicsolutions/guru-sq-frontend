@@ -12,6 +12,7 @@ import LandingPage from 'pages/landing/LandingPage';
 import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
 import socket from './socket';
+import Authorization from './components/authorization/Authorization';
 
 const App = () => {
   const { loggedIn } = useSelector((state) => state.auth);
@@ -20,6 +21,7 @@ const App = () => {
 
   return (
     <Router>
+      <Authorization>
       {
         !loggedIn
           ?
@@ -45,6 +47,7 @@ const App = () => {
             }
           </Switch>
       }
+      </Authorization>
     </Router>
   );
 }

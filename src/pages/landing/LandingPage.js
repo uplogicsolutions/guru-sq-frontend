@@ -5,23 +5,15 @@ import Logo from 'assets/gurusq.png';
 import Sqaure from 'assets/gradient50.png';
 import Landing from 'assets/landing.mp4'
 import { Button, Col, Input, Row, Alert } from 'rsuite';
-import { checkAuth, setLoading, setRedirect, setRedirectUrl, setLoggedIn } from 'auth/store';
+import { setLoading, setRedirect, setRedirectUrl, setLoggedIn } from 'auth/store';
 import { register } from 'api/auth';
 
 const LandingPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { loading, redirect, redirectUrl } = useSelector((state) => state.auth);
+    const { loading } = useSelector((state) => state.auth);
     const history = useHistory();
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(checkAuth())
-    }, []);
-
-    if (redirect) {
-        history.push(redirectUrl)
-    }
 
     const handleRegister = async () => {
         dispatch(setLoading(true));
