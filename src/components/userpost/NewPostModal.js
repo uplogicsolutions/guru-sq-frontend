@@ -28,6 +28,7 @@ const NewPostModal = ({ handleClose, show, postType }) => {
             const file = files[0];
             await handleAdd(file, postType, post_description, "Public");
         }
+        handleClose();
     }
 
     const handleAdd = (file, post_type, post_description, visibility) => {
