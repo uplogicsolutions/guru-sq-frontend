@@ -1,6 +1,5 @@
 import React from 'react';
-import { FaComment, FaCommentAlt, FaCommentDollar, FaComments, FaRegCommentAlt, FaRegThumbsUp, FaThumbsUp } from 'react-icons/fa';
-import { Panel } from 'rsuite';
+import { FaRegCommentAlt, FaRegThumbsUp } from 'react-icons/fa';
 
 const NotificationCard = props => {
 
@@ -23,11 +22,11 @@ const NotificationCard = props => {
         }
     }
     return (
-        <div bordered class="shadow border flex my-2 flex-row p-2 md:p-0">
-            <div className="flex items-center py-5 px-3">
+        <div bordered class="shadow border flex my-2 flex-row items-center p-2 md:p-0">
+            <div className="flex items-center py-2 px-3">
                 {renderIcon(notification_type)}
             </div>
-            <div class="py-5 text-left">
+            <div class="py-2 text-left">
                 <p class="font-normal">
                     {renderText(notification_type)}
                 </p>

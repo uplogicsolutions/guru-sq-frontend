@@ -6,7 +6,7 @@ import { Col, Grid, Row } from 'rsuite';
 const NotificationPage = props => {
     return (
         <BasePage>
-            <Grid className="px-5" fluid>
+            <Grid className="px-2 md:px-5" fluid>
                 <Row>
                     <Col className="border my-2 p-2 h-30" xsHidden md={6}>
                         <img
