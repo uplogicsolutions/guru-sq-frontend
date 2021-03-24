@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import { get, like, comment, add } from 'api/post'
 import S3 from 'react-aws-s3'
 import s3Config from 'configs/s3Config'
@@ -98,6 +98,16 @@ export const addPost = createAsyncThunk(
   }
 );
 
+export const handleLikeEvent = createAsyncThunk(
+  'post/likeEvent',
+  async (_data, { getState }) => {
+    const { user } = getState().auth;
+    _data.current_user = user;
+    return _data;
+  }
+);
+
+
 const initialState = {
   loading: false,
   posts: [],
@@ -114,7 +124,6 @@ const postSlice = createSlice({
     },
     [loadPosts.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log(action.payload)
       if (action.payload.type == 'success') state.posts = action.payload.data.data;
       else state.error = action.payload.data.message;
     },
@@ -123,14 +132,7 @@ const postSlice = createSlice({
       console.log(action.payload);
     },
     [likePost.fulfilled]: (state, action) => {
-      if (action.payload.type == 'success') {
-        for (let post of state.posts) {
-          if (post.post_id == action.payload.data.data.post_id) {
-            post.isLiked = !post.isLiked;
-            post.likesCount = action.payload.data.data.likesCount;
-          }
-        }
-      } else {
+      if (action.payload.type != 'success') {
         state.error = "Could not like/unlike post";
       }
     },
@@ -149,6 +151,17 @@ const postSlice = createSlice({
       console.log(action.payload)
       //handle add post
     },
+    [handleLikeEvent.fulfilled]: (state, action) => {
+      for (let post of state.posts) {
+        if (post.post_id == action.payload.post_id) {
+          post.likesCount = action.payload.likesCount;
+          if (action.payload.current_user.user_id == action.payload.liked_by_user_id) {
+            if(action.payload.liked_type == 'like') post.isLiked = true;
+            else post.isLiked = false;
+          }
+        }
+      }
+    }
   }
 });
 

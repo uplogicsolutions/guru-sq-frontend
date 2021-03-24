@@ -1,1 +1,1 @@
-export { default, loadPosts, likePost, commentPost, addPost } from './postSlice'
+export { default, loadPosts, likePost, commentPost, addPost, handleLikeEvent } from './postSlice'

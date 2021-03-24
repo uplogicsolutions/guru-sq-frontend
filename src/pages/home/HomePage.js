@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import {useHistory} from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { loadPosts, likePost, commentPost } from './store';
+import { loadPosts, likePost, commentPost, handleLikeEvent } from './store';
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage";
 import NewPostModal from 'components/userpost/NewPostModal';
@@ -27,6 +27,7 @@ import {
 import ButtonCard from "components/buttonCard/ButtonCard";
 import { useState } from 'react/cjs/react.development';
 import { getAuth } from 'auth/store';
+import socket from '../../socket';
 
 const username = "Jhon";
 
@@ -65,6 +66,9 @@ const Homepage = () => {
         setAccept(type);
     }
 
+    socket.on('like', (data) => {
+        dispatch(handleLikeEvent(data));
+    })
     return (
         <BasePage>
             
