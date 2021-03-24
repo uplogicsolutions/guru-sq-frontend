@@ -20,15 +20,15 @@ const Tabs = ({ color }) => {
     ]
     return (
         <BasePage>
-            <Grid className=" px-2 md:px-5 h-screen" style={{maxHeight:'100vh'}} fluid>
-                <Row className="h-full">
-                    <Col className="border my-2 p-2 h-30" xsHidden md={6}>
+            <Grid className=" px-2 md:px-5 h-screen max-h-100-vh" fluid>
+                <Row>
+                    {/* <Col className="border my-2 p-2 h-30" xsHidden md={6}>
                         <img
                             className=""
                             src="http://mediatreeglobal.com//assets/img/business/advertiser.png"
                         />
-                    </Col>
-                    <Col className="my-2 flex flex-col h-full" xs={24} md={18}>
+                    </Col> */}
+                    <Col className="my-2 flex flex-col" xs={24} md={18}>
                         <Panel className="m-0 mb-2 p-0 flex-shrink-0" bordered>
                             <p className="font-semibold g-primary-color">ClusterName</p>
                         </Panel>
@@ -41,7 +41,7 @@ const Tabs = ({ color }) => {
                                 ))}
                             </div>
                         </Panel>
-                        <div className="flex-grow border" bordered>
+                        <div className="flex-grow bg-gray-100 border"  bordered>
                             <ChatPage />
                         </div>
                     </Col>
