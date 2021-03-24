@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import {useHistory} from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { loadPosts, likePost, commentPost, handleLikeEvent } from './store';
+import { loadPosts, likePost, commentPost, handleLikeEvent, handleCommentEvent } from './store';
 import UserPost from "components/userpost/UserPost";
 import BasePage from "pages/base/BasePage";
 import NewPostModal from 'components/userpost/NewPostModal';
@@ -69,6 +69,11 @@ const Homepage = () => {
     socket.on('like', (data) => {
         dispatch(handleLikeEvent(data));
     })
+
+    socket.on('comment', (data) => {
+        dispatch(handleCommentEvent(data));
+    })
+
     return (
         <BasePage>
             
@@ -124,7 +129,7 @@ const Homepage = () => {
                         {/* User Post's */}
                         {
                             posts.map( (post, index) =>
-                                <UserPost key={index} post={post} handleLike={handleLike} />
+                                <UserPost key={index} post={post} handleLike={handleLike} handleComment={handleComment} />
                             )
 
                         }

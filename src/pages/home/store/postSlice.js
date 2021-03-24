@@ -107,6 +107,13 @@ export const handleLikeEvent = createAsyncThunk(
   }
 );
 
+export const handleCommentEvent = createAsyncThunk(
+  'post/commentEvent',
+  async (_data, { getState }) => {
+    return _data;
+  }
+)
+
 
 const initialState = {
   loading: false,
@@ -159,6 +166,13 @@ const postSlice = createSlice({
             if(action.payload.liked_type == 'like') post.isLiked = true;
             else post.isLiked = false;
           }
+        }
+      }
+    },
+    [handleCommentEvent.fulfilled]: (state, action) => {
+      for (let post of state.posts) {
+        if (post.post_id == action.payload.post_id) {
+          post.comments = action.payload.comments;
         }
       }
     }

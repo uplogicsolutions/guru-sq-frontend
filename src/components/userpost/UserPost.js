@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Col,
     Icon,
@@ -19,17 +19,11 @@ import {
 } from 'react-icons/fa'
 import PrimaryText from 'components/typo/PrimaryText';
 import UserComment from './UserComment';
+import { useCallback } from 'react';
 
 const UserPost = props => {
-
-    const { post, handleLike } = props
-
-    //TODO fetch comments from post object
-    const comments = [
-        { comment: 'Awesome' },
-        { comment: 'So coooool!!!!!!!' }
-
-    ]
+    const [comment, setComment] = useState('');
+    const { post, handleLike, handleComment } = props
 
     const renderPost = () => {
         if (post.post_type === 'text') {
@@ -39,9 +33,15 @@ const UserPost = props => {
         } else if (post.post_type === 'video') {
             return <video src={post.post_url} controls disablePictureInPicture />
         } else if (post.post_type === 'audio') {
-            return <audio style={{width:'100%'}} src={post.post_url} controls />
+            return <audio style={{ width: '100%' }} src={post.post_url} controls />
         }
     }
+
+    const handleSendComment = useCallback(async () => {
+        if (comment && comment != '') {
+            handleComment(post.post_id, comment);
+        }
+    }, [comment]);
 
     return (
         <Panel className="border-gray-300" style={{ marginTop: 12 }} bordered>
@@ -85,34 +85,31 @@ const UserPost = props => {
                                 <FaComment className="inline" /> Comment
                         </Button>
                         </FlexboxGrid.Item>
-                        {/* <FlexboxGrid.Item>
-                            <Button appearance="default">
-                                <FaShare className="inline" /> Share
-                        </Button>
-                        </FlexboxGrid.Item> */}
                     </FlexboxGrid>
                 </Col>
             </Row>
 
             <hr />
             <Row >
-                {/* <Col className="mr-1" xs={1}>
-                    <Avatar size="sm"/>
-                </Col> */}
                 <Col xs={24}>
                     <InputGroup>
-                        <Input placeholder="What would you like to comment ?" />
+                        <Input placeholder="What would you like to comment ?" onChange={(val) => setComment(val)} />
                         <InputGroup.Button appearance="primary">
-                            <Icon icon="send" />
+                            <Button style={{ padding: '0px' }} onClick={handleSendComment} >
+                                <Icon icon="send" />
+                            </Button>
                         </InputGroup.Button>
                     </InputGroup>
                 </Col>
             </Row>
             <hr />
             <Row className="overflow-scroll h-50">
-                {comments.map(comment => (
-                    <Col><UserComment></UserComment></Col>
-                ))}
+                {
+                    post && post.comments &&
+                    post.comments.map((comment, index) => (
+                        <Col key={index}><UserComment comment={comment}></UserComment></Col>
+                    ))
+                }
             </Row>
         </Panel>
     )
