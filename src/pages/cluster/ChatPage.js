@@ -32,6 +32,8 @@ const ChatPage = props => {
                 time: new Date()
             }
         ])
+
+        setUserInput('')
     }
 
     return (
@@ -56,7 +58,7 @@ const ChatPage = props => {
                                 )
                             })}
                         </div>
-                        <Input onChange={(text, e) => setUserInput(text)} type="text" class="h-10 pl-10 pr-20 border w-full z-0 focus:shadow focus:outline-none" placeholder="Message" />
+                        <Input value={user_input} onChange={(text, e) => setUserInput(text)} type="text" class="h-10 pl-10 pr-20 border w-full z-0 focus:shadow focus:outline-none" placeholder="Message" />
                         <div className="">
                             <button onClick={handleSendMessage} class="p-2 text-white rounded-lg">
                                 <IoIosSend  className="g-primary-color " size="20" />
