@@ -1,9 +1,22 @@
 import NotificationCard from 'components/notification/NotificationCard';
 import BasePage from 'pages/base/BasePage';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Col, Grid, Row } from 'rsuite';
+import { useSelector, useDispatch } from 'react-redux';
+import { getNotifications, readNotifications } from './store';
 
 const NotificationPage = props => {
+    const dispatch = useDispatch()
+    const { loading, notifications, error } = useSelector(state => state.notifications)
+
+    useEffect(() => {
+        dispatch(getNotifications());
+    }, [])
+
+    useEffect(() => {
+        dispatch(readNotifications());
+    },[])
+
     return (
         <BasePage>
             <Grid className="px-2 md:px-5" fluid>
@@ -15,8 +28,12 @@ const NotificationPage = props => {
                         />
                     </Col>
                     <Col xs={24} md={18}>
-                        <NotificationCard notification_type='like' notification_text='This is test notification' />
-                        <NotificationCard notification_type='comment' notification_text='This is test notification' />
+                        {
+                            notifications && notifications !== undefined &&
+                            notifications.map( (notification, index) =>
+                                <NotificationCard notification_type={notification.type} notification_text={notification.description} />
+                            )
+                        }
                     </Col>
                 </Row>
             </Grid>

@@ -5,7 +5,6 @@ const NotificationCard = props => {
 
     const { notification_type, notification_text } = props;
 
-
     const renderIcon = (notification_type) => {
         if (notification_type === 'like') {
             return <div class="w-auto p-4 h-auto bg-gray-200 rounded-full"><FaRegThumbsUp className="g-primary-color" size="15" /></div>;
@@ -32,7 +31,13 @@ const NotificationCard = props => {
                 </p>
                 <figcaption class="font-medium">
                     <div class="text-gray-500">
-                        {notification_text}
+                        {
+                            notification_type == 'like'
+                            ?
+                            `You have ${notification_text} likes on your post.`
+                            :
+                            notification_text
+                        }
                     </div>
                 </figcaption>
             </div>

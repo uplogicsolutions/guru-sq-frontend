@@ -5,13 +5,15 @@ import register from 'pages/register/store/registerSlice'
 import auth from 'auth/store/authSlice'
 import post from 'pages/home/store'
 import profile from 'pages/profile/store/profileSlice'
+import notifications from 'pages/notifications/store/notificationSlice'
 
 const reducer = combineReducers({
   auth,
   login,
   register,
   post,
-  profile
+  profile,
+  notifications,
 })
 
 const store = configureStore({
