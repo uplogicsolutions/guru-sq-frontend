@@ -34,30 +34,30 @@ const LandingPage = () => {
             ?
             <h1>loading....</h1>
             :
-            <div className="p-5" style={{ height: '100vh', position: 'relative', overflowX: 'hidden' }}>
+            <div className="p-1" style={{ height: '100vh', position: 'relative', overflowX: 'hidden' }}>
                 <header>
-                    <img className="p-5" height={100} width={250} src={Logo} />
+                    <img className="pt-2 pl-2" height={90} width={240} src={Logo} />
                 </header>
                 <img src={Sqaure} width={500} height={500} style={{ position: 'absolute', top: -80, right: -90, rotate: '65deg' }} />
 
                 <div style={{ position: 'relative' }} className="flex flex-col">
-                    <Row className="p-5 mt-3">
-                        <Col xs={24} md={8}>
+                    <Row className="p-3 mt-3">
+                        <Col className="mt-2 md:mt-0" xs={24} md={8}>
                             <Input name="username" className="" value={username} onChange={(val) => setUsername(val)} placeholder="Username" />
                         </Col>
-                        <Col xs={24} md={8}>
+                        <Col className="mt-2 md:mt-0" xs={24} md={8}>
                             <Input name="password" className="" value={password} onChange={(val) => setPassword(val)} placeholder="Password" type="password" />
                         </Col>
-                        <Col xs={24} md={8}>
+                        <Col className="mt-2 md:mt-0" xs={24} md={8}>
                             <div className="flex flex-col">
                                 <Button appearance="primary" className="" onClick={handleRegister}>Register</Button>
-                                <a className="self-center" style={{cursor: "pointer"}} onClick={() => history.push('/login')}>Already registered? Login</a>
+                                <a className="mt-1 self-center" style={{cursor: "pointer"}} onClick={() => history.push('/login')}>Already registered? Login</a>
                             </div>
                         </Col>
 
                     </Row>
                     <hr />
-                    <div className="p-5 flex justify-center w-full" >
+                    <div className="p-3 flex justify-center w-full" >
                         <video autoPlay loop controls muted className="w-full" style={{ height: 'auto' }} >
                             <source src={Landing} type="video/mp4" />
                         </video>

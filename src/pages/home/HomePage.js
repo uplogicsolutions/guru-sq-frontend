@@ -68,7 +68,7 @@ const Homepage = () => {
     return (
         <BasePage>
             
-            <Grid fluid style={{ paddingTop: 12, background: '#f3f2ef' }}>
+            <Grid fluid className="pt-2">
                 <Row>
                     <Col xs={20} md={18}>
                         {showNewPostModal && <NewPostModal show={showNewPostModal} handleClose={handleClose} postType={accept}/>}
@@ -84,7 +84,7 @@ const Homepage = () => {
                     </Col>
                     <Col xs={24} md={14}>
                         {/* Upper Post Box */}
-                        <Panel className="custom-card bg-custom-gray" bordered>
+                        <Panel className="border-gray-300 shadow" bordered>
                             <Row>
                                 <InputGroup>
                                     <Input icon block placeholder={`Hi ${username}, Anything for today ?`} />

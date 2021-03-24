@@ -44,7 +44,7 @@ const UserPost = props => {
     }
 
     return (
-        <Panel className="custom-card bg-custom-gray" style={{ marginTop: 12 }} bordered>
+        <Panel className="border-gray-300" style={{ marginTop: 12 }} bordered>
             <Row>
                 <Col xs={24} md={24}>
                     <Row>
