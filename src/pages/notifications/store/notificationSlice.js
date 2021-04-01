@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { get, read } from 'api/notifications'
+import { get, read, count } from 'api/notifications'
 
 const initialState = {
   loading: false,
   notifications: [],
+  unreadNotificationsCount: 0,
   error: ''
 }
 
@@ -27,8 +28,28 @@ export const getNotifications = createAsyncThunk(
 );
 export const readNotifications = createAsyncThunk(
   'notifications/read',
-  async () => {
+  async ({dispatch}) => {
     return read()
+      .then((response) => {
+        if (response && response.data) {
+          if (response.type == 'success') {
+            dispatch(getUnreadNotificationsCount())
+            return response.data
+          } else {
+            return response.message
+          }
+        }
+      })
+      .catch((error) => {
+        return error;
+      });
+  }
+);
+
+export const getUnreadNotificationsCount = createAsyncThunk(
+  'notifications/count',
+  async () => {
+    return count()
       .then((response) => {
         if (response && response.data) {
           if (response.type == 'success') {
@@ -61,6 +82,9 @@ const notificationSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
+    [getUnreadNotificationsCount.fulfilled]: (state, action) => {
+      state.unreadNotificationsCount = action.payload.data
+    }
   }
 });
 

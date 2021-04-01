@@ -1,4 +1,4 @@
-name: deploy-prod
+name: deploy-staging
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
-        cp .env.prod .env
+        cp .env.staging .env
         rm .env.*
     - run: npm install
     - run: CI=false npm run build      
@@ -25,8 +25,8 @@ jobs:
     - uses: horochx/deploy-via-scp@master
       with:
         local: build/*
-        remote: ${{ secrets.REMOTE_DIR }}
-        host: ${{ secrets.HOSTNAME }}
-        port: ${{ secrets.PORT }}
-        user: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PASSWORD }}
+        remote: ${{ secrets.STAGING_REMOTE_DIR }}
+        host: ${{ secrets.STAGING_HOSTNAME }}
+        port: ${{ secrets.STAGING_PORT }}
+        user: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_PASSWORD }}

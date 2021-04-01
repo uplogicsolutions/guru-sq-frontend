@@ -3,7 +3,7 @@ import { get, like, comment, add } from 'api/post'
 import S3 from 'react-aws-s3'
 import s3Config from 'configs/s3Config'
 import { uuid } from 'short-uuid'
-import { act } from '@testing-library/react'
+import { getUnreadNotificationsCount } from 'pages/notifications/store';
 
 export const loadPosts = createAsyncThunk(
   'post/load',
@@ -100,7 +100,8 @@ export const addPost = createAsyncThunk(
 
 export const handleLikeEvent = createAsyncThunk(
   'post/likeEvent',
-  async (_data, { getState }) => {
+  async (_data, { getState, dispatch }) => {
+    dispatch(getUnreadNotificationsCount())
     const { user } = getState().auth;
     _data.current_user = user;
     return _data;
@@ -109,7 +110,8 @@ export const handleLikeEvent = createAsyncThunk(
 
 export const handleCommentEvent = createAsyncThunk(
   'post/commentEvent',
-  async (_data, { getState }) => {
+  async (_data, { dispatch }) => {
+    dispatch(getUnreadNotificationsCount())
     return _data;
   }
 )
