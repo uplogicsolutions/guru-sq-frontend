@@ -28,11 +28,15 @@ const NotificationPage = props => {
                         />
                     </Col>
                     <Col xs={24} md={18}>
-                        {
+                        {notifications.length > 0 ? (
                             notifications && notifications !== undefined &&
                             notifications.map( (notification, index) =>
                                 <NotificationCard notification_type={notification.type} notification_text={notification.description} />
-                            )
+                            ))
+                            :
+                            <div className="w-full h-full flex justify-center items-center">
+                                <p>No new notifications</p>
+                            </div>
                         }
                     </Col>
                 </Row>
