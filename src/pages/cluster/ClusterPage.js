@@ -1,57 +1,37 @@
 import UserCard from "components/userCard/UserCard";
 import BasePage from "pages/base/BasePage";
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Button, Col, Grid, Input, Panel, Row } from "rsuite";
 import { TabGroup } from '@statikly/funk'
+import { useSelector, useDispatch } from 'react-redux';
+import { getClusterUsers, getClusterMessages, sendClusterMessage, handleClusterMessageEvent } from './store';
+import socket from '../../socket';
 
-import ChatPage from "./ChatPage";
-
-const Tabs = ({ color }) => {
-
-    const Users = [
-        { user_name: 'Shubham' },
-        { user_name: 'Test User' },
-        { user_name: 'Me' },
-        { user_name: 'First' },
-        { user_name: 'Second' },
-        { user_name: 'Thrid' },
-        { user_name: 'Fourth' },
-        { user_name: 'Fifth' },
-        { user_name: 'Sixth' },
-        { user_name: 'Last' }
-    ]
-
-    const current_user = '123';
+const Tabs = () => {
     const [input_message, setInputMessage] = useState('');
-    const [messages, setMessages] = useState([
-        {
-            'user_id' : '123',
-            'message' : 'Test Message',
-            'time': new Date(),
-        },
-        {
-            'user_id' : '122',
-            'message' : 'Test Message 2',
-            'time': new Date(),
-        }
-    ])
+    const dispatch = useDispatch()
+    const { loading, users, messages, error } = useSelector(state => state.cluster)
+    const { user_id } = useSelector(state => state.auth.user)
 
-    const handleOnSend = () => {
-        
-        if(input_message === ''){
+    useEffect(() => {
+        dispatch(getClusterUsers());
+        dispatch(getClusterMessages());
+    }, [])
+
+    const handleOnSend = async () => {
+        if (input_message === '') {
             return
         }
-        
-        setMessages([
-            ...messages,
-            {
-                user_id: '122',
-                message: input_message,
-                time: new Date()
-            }
-        ])
+        await dispatch(sendClusterMessage({
+            message: input_message
+        }));
+        dispatch(getClusterMessages());
         setInputMessage('')
     }
+
+    socket.on('cluster_messages', (data) => {
+        dispatch(handleClusterMessageEvent(data));
+    })
 
     return (
         <BasePage>
@@ -63,9 +43,9 @@ const Tabs = ({ color }) => {
                         </Panel>
                         <Panel className="mb-2 flex-shrink-0" header={<p className="font-semibold g-primary-color">Users</p>} collapsible bordered>
                             <div className="flex justify-center flex-row flex-wrap">
-                                {Users.map((user, index) => (
+                                {users && users.map((user, index) => (
                                     <div className="w-full md:w-1/4 py-2">
-                                        <UserCard key={index} user_name={user.user_name} />
+                                        <UserCard key={index} user_name={user.name} profile={user.profileImage}/>
                                     </div>
                                 ))}
                             </div>
@@ -79,7 +59,7 @@ const Tabs = ({ color }) => {
                                             className="h-12 px-12 transition-colors duration-150"
                                             activeClassName="bg-black text-white"
                                             inactiveClassName="text-black">
-                                            Activities    
+                                            Activities
                                         </TabGroup.Tab>
                                         <TabGroup.Tab
                                             index={1}
@@ -112,21 +92,21 @@ const Tabs = ({ color }) => {
                                         inactiveClassName="opacity-0 -translate-x-2">
 
                                         <div className="w-full h-full overflow-y-auto bg-red-100 mb-5 flex flex-col justify-end items-end">
-                                            
+
                                             {messages.map(message => (
-                                                <div className={`flex px-4 my-2 w-max justify-start ${message.user_id === current_user ? 'self-start' : 'self-end'} items-center bg-green-100 flex-row`}>
+                                                <div className={`flex px-4 my-2 w-max justify-start ${message.sender_id === user_id ? 'self-end' : 'self-start'} items-center bg-green-100 flex-row`}>
                                                     <div className="mx-2 my-2 p-2">
                                                         {message.message}
                                                     </div>
-                                                    <Avatar className="flex-grow-0"/>
+                                                    <Avatar className="flex-grow-0" />
                                                 </div>
                                             ))}
-                                            
+
                                         </div>
                                         <div className="fixed h-10 bottom-0 bg-white w-full">
-                                            <Input 
-                                                className="h-full w-11/12" 
-                                                value={input_message} 
+                                            <Input
+                                                className="h-full w-11/12"
+                                                value={input_message}
                                                 onChange={(text) => setInputMessage(text)}
                                                 placeholder="Type message" />
                                             <Button onClick={handleOnSend} className="h-full w-1/12">Send</Button>

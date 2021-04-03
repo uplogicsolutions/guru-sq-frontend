@@ -3,10 +3,10 @@ import { Avatar } from 'rsuite';
 
 const UserCard = props => {
 
-    const { user_name } = props;
+    const { user_name, profile } = props;
 
     return (<div className="flex items-center flex-row">
-        <Avatar circle/>
+        <Avatar src={profile} circle/>
         <p className="px-2 font-semibold">{user_name}</p>
     </div>
     )
