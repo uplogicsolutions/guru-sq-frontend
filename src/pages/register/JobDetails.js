@@ -18,7 +18,7 @@ import { resetRegisterStates, registerSuccess, registerFailure, registerPending 
 import { registerProfessionalDetails } from 'api/auth';
 import { getOptions } from 'api/options'
 import { parseArrayOfObject } from 'utils/parse';
-
+import { setRedirectUrl } from 'auth/store'
 import { useForm, Controller } from "react-hook-form";
 import Danger from 'components/alerts/Danger';
 
@@ -119,6 +119,10 @@ const JobDetails = (props) => {
         } else {
             dispatch(registerFailure(response.message))
         }
+    }
+
+    const handleSkip = async () => {
+       dispatch(setRedirectUrl('/home'));
     }
 
     if (redirect) {
@@ -324,7 +328,7 @@ const JobDetails = (props) => {
                     </Row>
                     <Row style={{ marginTop: 15 }} className="show-grid">
                         <Col xs={24} sm={24} md={12}>
-                            <Button block onClick={toggleForm}> <b>Cancel</b> </Button>
+                            <Button block onClick={handleSkip}> <b>Skip</b> </Button>
                         </Col>
                         <Col xs={24} sm={24} md={12}>
                             <Button block type="submit" appearance="primary"> <b>Add</b> </Button>
