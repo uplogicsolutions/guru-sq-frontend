@@ -65,7 +65,6 @@ const clusterSlice = createSlice({
     },
     [getClusterUsers.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log(action.payload.data)
       if (action.payload.type == 'success') state.users = action.payload.data;
       else state.error = action.payload.data.message;
     },
