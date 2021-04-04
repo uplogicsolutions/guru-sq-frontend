@@ -1,19 +1,20 @@
 import BasePage from 'pages/base/BasePage';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
 	Col,
 	Grid,
 	Row,
 	Panel,
 } from 'rsuite';
-import EditPersonalDetails from './EditPersonalDetialsModal';
-import EditSchoolTeacher from './EditSchoolDetails';
-import EditSubjectDetails from './EditSubjectDetails';
+import PersonalDetails from './PersonalDetails';
+import SchoolDetails from './SchoolDetails';
+import SubjectDetails from './SubjectDetails';
 import { FaEdit } from 'react-icons/fa';
 
-const ProfilePage = props => {
+const ProfilePage = () => {
 	const [editPersonalDetails, setEditPersonalDetails] = useState(false);
 	const [editSubjects, setEditSubjects] = useState(false);
+	const [editSchoolDetails, setEditSchoolDetails] = useState(false);
 
 	return (
 		<BasePage>
@@ -34,30 +35,44 @@ const ProfilePage = props => {
 									<Panel className="custom-card mt-5" bordered>
 										<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 											<h4>Personal Details</h4>
-											<FaEdit
-												onClick={() => setEditPersonalDetails(!editPersonalDetails)}
-												style={{ cursor: 'pointer' }}
-											/>
+											{
+												!editPersonalDetails &&
+												<FaEdit
+													onClick={() => setEditPersonalDetails(true)}
+													style={{ cursor: 'pointer' }}
+												/>
+											}
 										</div>
-										<EditPersonalDetails edit={editPersonalDetails} setEdit={setEditPersonalDetails} />
+										<PersonalDetails edit={editPersonalDetails} setEdit={setEditPersonalDetails} />
 									</Panel>
 								</div>
 								<div id="section-2">
 									<Panel className="custom-card mt-5" bordered>
-										<h4>School Details</h4>
-										<EditSchoolTeacher />
+										<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+											<h4>School Details</h4>
+											{
+												!editSchoolDetails &&
+												<FaEdit
+													onClick={() => setEditSchoolDetails(true)}
+													style={{ cursor: 'pointer' }}
+												/>
+											}
+										</div>
+										<SchoolDetails edit={editSchoolDetails} setEdit={setEditSchoolDetails} />
 									</Panel>
 								</div>
 								<div id="section-3">
 									<Panel className="custom-card mt-5" bordered>
 										<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 											<h4>Subjects Details</h4>
-											<FaEdit
-												onClick={() => setEditSubjects(!editSubjects)}
-												style={{ cursor: 'pointer' }}
-											/>
+											{!editSubjects &&
+												<FaEdit
+													onClick={() => setEditSubjects(true)}
+													style={{ cursor: 'pointer' }}
+												/>
+											}
 										</div>
-										<EditSubjectDetails edit={editSubjects} setEdit={setEditSubjects} />
+										<SubjectDetails edit={editSubjects} setEdit={setEditSubjects} />
 									</Panel>
 								</div>
 							</Col>
@@ -65,10 +80,8 @@ const ProfilePage = props => {
 					</Col>
 				</Row >
 			</Grid >
-
 		</BasePage >
 	)
-
 }
 
 export default ProfilePage;
