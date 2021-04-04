@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { addPost } from 'pages/home/store';
 import { Button, Input, Loader, Modal, Uploader } from 'rsuite';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react/cjs/react.development';
 
 const NewPostModal = ({ handleClose, show, postType }) => {
     const dispatch = useDispatch()
