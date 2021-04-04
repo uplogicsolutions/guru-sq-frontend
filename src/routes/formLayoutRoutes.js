@@ -35,5 +35,5 @@ export const routes = [
     {
         path: '/job-details',
         component: JobDetails
-    }
+    },
 ]
