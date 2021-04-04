@@ -12,7 +12,6 @@ const Tabs = () => {
     const dispatch = useDispatch()
     const { loading, users, messages, error } = useSelector(state => state.cluster)
     const { user_id } = useSelector(state => state.auth.user)
-
     const scrollToRef = useRef(null);
 
     useEffect(() => {
@@ -54,7 +53,7 @@ const Tabs = () => {
                             <div className="flex justify-center flex-row flex-wrap">
                                 {users && users.map((user, index) => (
                                     <div className="w-full md:w-1/4 py-2">
-                                        <UserCard key={index} user_name={user.name} profile={user.profileImage} />
+                                        <UserCard key={index} user_id={user.user_id} user_name={user.name} profile={user.profileImage} />
                                     </div>
                                 ))}
                             </div>

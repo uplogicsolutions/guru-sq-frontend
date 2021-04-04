@@ -72,3 +72,22 @@ export const editSchoolDetails = async (data) => {
     }
     return failureResponse()
 }
+
+export const getUserProfileDetails = async (user_id) => {
+    try {
+        let config = getConfig()
+        const response = await axios.get(`/user/profile`, 
+            {   ...config, 
+                params: {
+                    user_id
+                }
+            }
+        );
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.code == 400) {
+            return failureResponse(error.response.message)
+        }
+    }
+    return failureResponse()
+}
