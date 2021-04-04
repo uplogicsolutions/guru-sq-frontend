@@ -7,7 +7,6 @@ import { routes as formRoutes } from 'routes/formLayoutRoutes';
 import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
 import './App.css';
 import 'rsuite/lib/styles/index.less';
-import test from 'pages/test/test';
 import { Loader } from 'rsuite';
 import LandingPage from 'pages/landing/LandingPage';
 import LoginPage from 'pages/login/LoginPage';
@@ -43,7 +42,6 @@ const App = () => {
                 <Route exact path="/">
                   <Redirect to="/home" />
                 </Route>
-                <Route path="/test" component={test} />
                 {
                   formRoutes.map((route, index) => <FormLayoutRoute key={index} path={route.path} component={route.component} />)
                 }
