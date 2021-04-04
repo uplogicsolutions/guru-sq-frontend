@@ -7,7 +7,9 @@ module.exports = override(
     modifyVars: {
       '@base-color': '#B38F3A',
       '@border-radius-base': '0px',
-      // '@panel-padding' : '12px'
+      '@input-bg-disabled': '#FFFFFF',
+      '@input-color-disabled': '#B38F3A',
+      '@input-color': '#B38F3A',
     }
   }),
   addPostcssPlugins([
