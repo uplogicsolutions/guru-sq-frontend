@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon, Loader, Alert } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux'
-import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
-import { registerPersonalDetails } from 'api/auth'
 import { getOptions } from 'api/options'
-
+import { getPersonalDetails } from 'api/user'
 import { useForm, Controller } from 'react-hook-form';
 import Danger from 'components/alerts/Danger';
 
 
 const EditPersonalDetails = props => {
-
+    const [ personal_details, setPersonalDetails] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [otherLanguagesFields, setOtherLanguagesFields] = useState([]);
     const [languages, setLanguages] = useState([])
     const [gender_data, setGenderData] = useState([])
     const [proficiency, setProficiency] = useState([])
-
+    const [edit, setEdit] = useState(false)
 
     const { errors, control, handleSubmit } = useForm();
 
-    const loadOptions = async () => {
+    const loadData = async () => {
         let response = await getOptions('languages')
         let languagesData = []
         response.data.data.map((value) => {
@@ -34,14 +34,15 @@ const EditPersonalDetails = props => {
         setGenderData(genderResponse.data.data)
         let proficiencyResponse = await getOptions('proficiency')
         setProficiency(proficiencyResponse.data.data)
+        let personalDetailsResponse = await getPersonalDetails();
+        if(personalDetailsResponse && personalDetailsResponse.type == 'success' && personalDetailsResponse.data) {
+            setPersonalDetails(personalDetailsResponse.data);
+        }
+        setLoading(false);
     }
 
-    const dispatch = useDispatch()
-    const { loading, redirect, redirectUrl, error } = useSelector(state => state.register)
-
     useEffect(() => {
-        dispatch(resetRegisterStates())
-        loadOptions();
+        loadData();
     }, [])
 
     const handleLanguageChange = (index, label, e) => {
@@ -86,18 +87,6 @@ const EditPersonalDetails = props => {
 
     }
 
-    if (redirect) {
-        props.history.push(redirectUrl);
-    }
-
-    const temp_details = {
-        first_name: 'John',
-        last_name: 'Doe',
-        dob: new Date(),
-        gender: 'male',
-        mother_tongue: 1
-    }
-
     return (
         loading
             ?
@@ -114,16 +103,17 @@ const EditPersonalDetails = props => {
                             <Controller
                                 name="first_name"
                                 control={control}
-                                defaultValue={temp_details.first_name}
+                                defaultValue={personal_details.first_name}
                                 rules={{
                                     required: true
                                 }}
                                 render={({ onChange, value }) =>
                                     <Input
                                         name="first_name"
-                                        value={value}
+                                        value={personal_details.first_name}
                                         onChange={(text, e) => onChange(e)}
                                         placeholder="First Name"
+                                        disabled={!edit}
                                     />
                                 }
                             />
@@ -133,15 +123,15 @@ const EditPersonalDetails = props => {
                             <Controller
                                 name="last_name"
                                 control={control}
-                                defaultValue={temp_details.last_name}
+                                defaultValue={personal_details.last_name}
                                 rules={{
                                     required: true
                                 }}
                                 render={({ onChange, value }) =>
                                     <Input
                                         onChange={(text, e) => onChange(e)}
+                                        value={personal_details.last_name}
                                         placeholder="Last Name"
-                                        value={value}
                                     />
                                 }
                             />
@@ -154,14 +144,14 @@ const EditPersonalDetails = props => {
                             <Controller
                                 name="dob"
                                 control={control}
-                                defaultValue={temp_details.dob}
+                                defaultValue={personal_details.dob}
                                 rules={{ required: true }}
 
                                 as={<DatePicker
                                     name="dob"
                                     format="DD-MM-YYYY"
                                     block
-                                    value={temp_details.dob}
+                                    value={personal_details.dob}
                                     placeholder="Date of Birth"
                                 />}
                             />
@@ -171,14 +161,14 @@ const EditPersonalDetails = props => {
                             <Controller
                                 name="gender"
                                 control={control}
-                                defaultValue={temp_details.gender}
+                                defaultValue={personal_details.gender}
                                 rules={{ required: true }}
                                 options={gender_data}
                                 as={<InputPicker
                                     name="gender"
                                     block
-                                    value={temp_details.gender}
                                     placeholder="Gender"
+                                    defaultValue={personal_details.gender}
                                     data={gender_data}
                                 />}
                             />
@@ -190,14 +180,14 @@ const EditPersonalDetails = props => {
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
                             <Controller
                                 name="mother_tongue"
+                                defaultValue={personal_details.mother_tongue}
                                 control={control}
-                                defaultValue={temp_details.mother_tongue}
                                 rules={{ required: true }}
                                 options={languages}
                                 as={<InputPicker
                                     name="mother_tongue"
                                     block
-                                    value={temp_details.mother_tongue}
+                                    defaultValue={personal_details.mother_tongue}
                                     placeholder="Mother Tongue"
                                     data={languages}
                                 />}
