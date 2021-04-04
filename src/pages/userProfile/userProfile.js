@@ -1,12 +1,20 @@
 import BasePage from 'pages/base/BasePage';
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Col, Panel, Row } from 'rsuite';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfile } from './store';
 
 const UserProfile = () => {
-
     const { user_id } = useParams();
-    console.log(user_id);
+    const dispatch = useDispatch();
+    const { loading, profile } = useSelector((state) => state.UserProfile);
+
+    useEffect(() => {
+        if (user_id) {
+            dispatch(getProfile(user_id));
+        }
+    }, [user_id]);
 
     const jobs = [
         {
@@ -160,7 +168,7 @@ const UserProfile = () => {
                                     </ol>
                                 </Panel>
                             </Col>
-                            <Col className="mt-3 md:mt-0"  xs={24} md={8}>
+                            <Col className="mt-3 md:mt-0" xs={24} md={8}>
                                 <p className="font-bold">Guidance Subjects</p>
                                 <Panel bordered>
                                     <ol className="px-4 py-2" style={{ listStyleType: "number" }}>

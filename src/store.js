@@ -7,6 +7,7 @@ import post from 'pages/home/store'
 import profile from 'pages/profile/store/profileSlice'
 import notifications from 'pages/notifications/store/notificationSlice'
 import cluster from 'pages/cluster/store/clusterSlice'
+import userProfile from 'pages/userProfile/store/userProfileSlice'
 
 const reducer = combineReducers({
   auth,
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   profile,
   notifications,
   cluster,
+  userProfile,
 })
 
 const store = configureStore({
