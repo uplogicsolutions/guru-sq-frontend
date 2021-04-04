@@ -3,7 +3,7 @@ import Homepage from 'pages/home/HomePage'
 import ProfilePage from 'pages/profile/ProfilePage'
 import NotificationPage from 'pages/notifications/NotificationsPage'
 import ClusterPage from 'pages/cluster/ClusterPage'
-import OthersProfile from 'pages/othersProfile/OthersProfile'
+import UserProfile from 'pages/userProfile/userProfile'
 
 export const routes = [
     {
@@ -28,7 +28,7 @@ export const routes = [
         component: ClusterPage
     },
     {
-        path: '/others-profile',
-        component: OthersProfile
+        path: '/user-profile/:user_id',
+        component: UserProfile
     }
 ]

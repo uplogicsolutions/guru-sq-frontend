@@ -1,8 +1,12 @@
 import BasePage from 'pages/base/BasePage';
 import React from 'react'
 import { Col, Panel, Row } from 'rsuite';
+import { useParams } from 'react-router-dom';
 
-const OthersProfile = () => {
+const UserProfile = () => {
+
+    const { user_id } = useParams();
+    console.log(user_id);
 
     const jobs = [
         {
@@ -124,4 +128,4 @@ const OthersProfile = () => {
     )
 }
 
-export default OthersProfile;
+export default UserProfile;

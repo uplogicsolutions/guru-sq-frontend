@@ -40,7 +40,6 @@ const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/cluster">Cluster</NavLink></li>
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/notifications">Alerts</NavLink></li>
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/profile">My Profile</NavLink></li>
-        <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/others-profile">Other Profile</NavLink></li>
       </ul>
     </nav>
 

@@ -13,9 +13,14 @@ const Authorization = (props) => {
   }, []);
 
   if (redirect) {
-    let currentUrl = window.location.href.split('/');
-    let path = currentUrl[currentUrl.length - 1].trim();
-    if(path!= 'landing' && path != 'home' && path != '') {
+    let currentUrl = window.location.href.trim();
+    if(currentUrl[currentUrl.length - 1] == '/') currentUrl = currentUrl.slice(0, -1);
+    currentUrl = currentUrl.split('/');
+    let path = currentUrl[currentUrl.length -1];
+    if(currentUrl[currentUrl.length - 2].trim() == 'user-profile') {
+      history.push(`/user-profile/${path}`);
+    }
+    else if(path!= 'landing' && path != 'home' && path != '') {
       history.push(`/${path}`)
     } else {
       history.push(redirectUrl)
