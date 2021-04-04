@@ -49,4 +49,26 @@ export const editSubjects = async (data) => {
     return failureResponse()
 }
 
+export const getSchoolDetails = async () => {
+    try {
+        const response = await axios.get(`/user/user-school-details`, getConfig());
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.code == 400) {
+            return failureResponse(error.response.message)
+        }
+    }
+    return failureResponse()
+}
 
+export const editSchoolDetails = async (data) => {
+    try {
+        const response = await axios.put(`/user/user-school-details`, data, getConfig());
+        return successResponse(response.data);
+    } catch (error) {
+        if (error.response && error.response.code == 400) {
+            return failureResponse(error.response.message)
+        }
+    }
+    return failureResponse()
+}
