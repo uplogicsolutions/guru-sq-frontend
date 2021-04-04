@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Logo from 'assets/gurusq.png';
 import Sqaure from 'assets/gradient50.png';
 import Landing from 'assets/landing.mp4'
-import { Button, Col, Input, Row, Alert } from 'rsuite';
+import { Button, Col, Input, Row, Alert, Loader } from 'rsuite';
 import { setLoading, setRedirect, setRedirectUrl, setLoggedIn } from 'auth/store';
 import { register } from 'api/auth';
 
@@ -17,9 +17,9 @@ const LandingPage = () => {
 
     const handleRegister = async () => {
         dispatch(setLoading(true));
-        let response = await register({username, password});
+        let response = await register({ username, password });
         dispatch(setLoading(false))
-        if(response.type == 'success') {
+        if (response.type == 'success') {
             Alert.success('Yay! Registration Successfull');
             dispatch(setLoggedIn(true));
             dispatch(setRedirectUrl('/personal-details'));
@@ -32,7 +32,7 @@ const LandingPage = () => {
     return (
         loading
             ?
-            <h1>loading....</h1>
+            <Loader size='md' center={true} />
             :
             <div className="p-1" style={{ height: '100vh', position: 'relative', overflowX: 'hidden' }}>
                 <header>
@@ -51,7 +51,7 @@ const LandingPage = () => {
                         <Col className="mt-2 md:mt-0" xs={24} md={8}>
                             <div className="flex flex-col">
                                 <Button appearance="primary" className="" onClick={handleRegister}>Register</Button>
-                                <a className="mt-1 self-center" style={{cursor: "pointer"}} onClick={() => history.push('/login')}>Already registered? Login</a>
+                                <a className="mt-1 self-center" style={{ cursor: "pointer" }} onClick={() => history.push('/login')}>Already registered? Login</a>
                             </div>
                         </Col>
 

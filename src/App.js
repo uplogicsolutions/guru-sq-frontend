@@ -8,45 +8,53 @@ import { routes as basicRoutes } from 'routes/basicLayoutRoutes';
 import './App.css';
 import 'rsuite/lib/styles/index.less';
 import test from 'pages/test/test';
+import { Loader } from 'rsuite';
 import LandingPage from 'pages/landing/LandingPage';
 import LoginPage from 'pages/login/LoginPage';
 import RegisterPage from 'pages/register/RegisterPage';
-import socket from './socket';
 import Authorization from './components/authorization/Authorization';
 
 const App = () => {
-  const { loggedIn } = useSelector((state) => state.auth);
-
-  socket.on('message', (message) => console.log(message))
+  const { loggedIn, loading } = useSelector((state) => state.auth);
 
   return (
     <Router>
       <Authorization>
-      {
-        !loggedIn
-          ?
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/landing" />
-            </Route>
-            <Route path="/landing" component={LandingPage} />
-            <FormLayoutRoute path='/login' component={LoginPage} />
-            <FormLayoutRoute path='/register' component={RegisterPage} />
-          </Switch>
-          :
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
-            <Route path="/test" component={test} />
-            {
-              formRoutes.map((route, index) => <FormLayoutRoute key={index} path={route.path} component={route.component} />)
-            }
-            {
-              basicRoutes.map((route, index) => <BasicLayoutRoute key={index} path={route.path} component={route.component} />)
-            }
-          </Switch>
-      }
+        {
+          loading
+            ?
+            <Loader size='md' center={true} />
+            :
+            !loggedIn
+              ?
+              <Switch>
+                <Route exact path="/">
+                  <Redirect to="/landing" />
+                </Route>
+                <Route path="/landing" component={LandingPage} />
+                <FormLayoutRoute path='/login' component={LoginPage} />
+                <FormLayoutRoute path='/register' component={RegisterPage} />
+                <Route>
+                  <Redirect to="/landing" />
+                </Route>
+              </Switch>
+              :
+              <Switch>
+                <Route exact path="/">
+                  <Redirect to="/home" />
+                </Route>
+                <Route path="/test" component={test} />
+                {
+                  formRoutes.map((route, index) => <FormLayoutRoute key={index} path={route.path} component={route.component} />)
+                }
+                {
+                  basicRoutes.map((route, index) => <BasicLayoutRoute key={index} path={route.path} component={route.component} />)
+                }
+                <Route>
+                  <Redirect to="/home" />
+                </Route>
+              </Switch>
+        }
       </Authorization>
     </Router>
   );

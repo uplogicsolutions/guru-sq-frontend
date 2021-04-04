@@ -13,7 +13,13 @@ const Authorization = (props) => {
   }, []);
 
   if (redirect) {
-    history.push(redirectUrl)
+    let currentUrl = window.location.href.split('/');
+    let path = currentUrl[currentUrl.length - 1].trim();
+    if(path!= 'landing' && path != 'home' && path != '') {
+      history.push(`/${path}`)
+    } else {
+      history.push(redirectUrl)
+    }
   }
 
   return (

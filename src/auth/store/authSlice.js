@@ -29,7 +29,7 @@ export const getAuth = createAsyncThunk(
 );
 
 const initialState = {
-    loading: false,
+    loading: true,
     user: null,
     loggedIn: false,
     redirect: false,
