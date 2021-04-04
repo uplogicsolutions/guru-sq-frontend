@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon, Loader, Alert } from 'rsuite';
-import { useDispatch, useSelector } from 'react-redux'
+import { Row, Col, Input, Form, DatePicker, InputPicker, Button, IconButton, Icon, Loader } from 'rsuite';
 import { getOptions } from 'api/options'
-import { getPersonalDetails } from 'api/user'
+import { getPersonalDetails, editPersonalDetails } from 'api/user'
 import { useForm, Controller } from 'react-hook-form';
 import Danger from 'components/alerts/Danger';
 
-
-const EditPersonalDetails = props => {
-    const [ personal_details, setPersonalDetails] = useState({});
+const EditPersonalDetails = ({edit, setEdit}) => {
+    const [personal_details, setPersonalDetails] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [otherLanguagesFields, setOtherLanguagesFields] = useState([]);
-    const [languages, setLanguages] = useState([])
-    const [gender_data, setGenderData] = useState([])
-    const [proficiency, setProficiency] = useState([])
-    const [edit, setEdit] = useState(false)
-
+    const [languages, setLanguages] = useState([]);
+    const [gender_data, setGenderData] = useState([]);
+    const [proficiency, setProficiency] = useState([]);
     const { errors, control, handleSubmit } = useForm();
 
     const loadData = async () => {
@@ -35,8 +31,9 @@ const EditPersonalDetails = props => {
         let proficiencyResponse = await getOptions('proficiency')
         setProficiency(proficiencyResponse.data.data)
         let personalDetailsResponse = await getPersonalDetails();
-        if(personalDetailsResponse && personalDetailsResponse.type == 'success' && personalDetailsResponse.data) {
+        if (personalDetailsResponse && personalDetailsResponse.type == 'success' && personalDetailsResponse.data) {
             setPersonalDetails(personalDetailsResponse.data);
+            setOtherLanguagesFields(personalDetailsResponse.data.secondary_languages);
         }
         setLoading(false);
     }
@@ -48,14 +45,12 @@ const EditPersonalDetails = props => {
     const handleLanguageChange = (index, label, e) => {
         const values = [...otherLanguagesFields];
         values[index].language_id = label
-
         setOtherLanguagesFields(values)
     }
 
     const handleProficiencyChange = (index, label, e) => {
         const values = [...otherLanguagesFields];
         values[index].proficiency = label
-
         setOtherLanguagesFields(values)
     }
 
@@ -65,26 +60,17 @@ const EditPersonalDetails = props => {
         setOtherLanguagesFields(values)
     }
 
-    const handleOnSubmit = async (form_data) => {
-
-        let data = {
-            ...form_data,
+    const handleOnSubmit = async (data) => {
+        await editPersonalDetails({
+            ...data,
             secondary_languages: otherLanguagesFields
-        }
-
-    //    console.log(data)
+        });
+        setEdit(false);
     }
     const handleDeleteButton = (index) => {
-        // console.log('Index',index)
         let values = [...otherLanguagesFields];
-        
-        console.log(values)
-        console.log(index)
         values.splice(index, 1);
-        console.log(values)
-
         setOtherLanguagesFields(values)
-
     }
 
     return (
@@ -110,7 +96,7 @@ const EditPersonalDetails = props => {
                                 render={({ onChange, value }) =>
                                     <Input
                                         name="first_name"
-                                        value={personal_details.first_name}
+                                        value={value}
                                         onChange={(text, e) => onChange(e)}
                                         placeholder="First Name"
                                         disabled={!edit}
@@ -130,8 +116,9 @@ const EditPersonalDetails = props => {
                                 render={({ onChange, value }) =>
                                     <Input
                                         onChange={(text, e) => onChange(e)}
-                                        value={personal_details.last_name}
+                                        value={value}
                                         placeholder="Last Name"
+                                        disabled={!edit}
                                     />
                                 }
                             />
@@ -153,6 +140,7 @@ const EditPersonalDetails = props => {
                                     block
                                     value={personal_details.dob}
                                     placeholder="Date of Birth"
+                                    disabled={!edit}
                                 />}
                             />
                             {errors.dob?.type === 'required' && <Danger>* Required</Danger>}
@@ -170,6 +158,7 @@ const EditPersonalDetails = props => {
                                     placeholder="Gender"
                                     defaultValue={personal_details.gender}
                                     data={gender_data}
+                                    disabled={!edit}
                                 />}
                             />
                             {errors.gender?.type === 'required' && <Danger>This is required</Danger>}
@@ -190,6 +179,7 @@ const EditPersonalDetails = props => {
                                     defaultValue={personal_details.mother_tongue}
                                     placeholder="Mother Tongue"
                                     data={languages}
+                                    disabled={!edit}
                                 />}
                             />
                             {errors.mother_tongue?.type === 'required' && <Danger>This is required</Danger>}
@@ -200,30 +190,53 @@ const EditPersonalDetails = props => {
                         <Col className="mt-2 md:m-0" xs={18} md={22}>
                             <p>Other Languages</p>
                         </Col>
-                        <Col className="mt-2 md:m-0" xs={4} md={2}>
-                            <IconButton onClick={handleAddButton} icon={<Icon icon={"plus"} />} />
-                        </Col>
-                        {otherLanguagesFields.map((field, index) => {
-                            return (
+                        {
+                            edit &&
+                            <Col className="mt-2 md:m-0" xs={4} md={2}>
+                                <IconButton onClick={handleAddButton} icon={<Icon icon={"plus"} />} />
+                            </Col>
+                        }
+                        {otherLanguagesFields &&
+                            otherLanguagesFields.map((language, index) => {
+                                return (
 
-                                <Row key={index} style={{ marginTop: 15, marginBottom: 5 }}>
-                                    <Col className="mt-2 md:m-0" xs={11} sm={12} md={10}>
-                                        <InputPicker onChange={(label, e) => handleLanguageChange(index, label, e)} block placeholder="Language" data={languages} />
-                                    </Col>
-                                    <Col className="mt-2 md:m-0" xs={11} sm={12} md={10}>
-                                        <InputPicker onChange={(label, e) => handleProficiencyChange(index, label, e)} block placeholder="Proficiency" data={proficiency} />
-                                    </Col>
-                                    <Col md={4}>
-                                        <IconButton onClick={() => handleDeleteButton(index)} icon={<Icon data-index={index} icon={"minus"} />} />
-                                    </Col>
-                                </Row>
+                                    <Row key={index} style={{ marginTop: 15, marginBottom: 5 }}>
+                                        <Col className="mt-2 md:m-0" xs={11} sm={12} md={10}>
+                                            <InputPicker
+                                                onChange={(label, e) => handleLanguageChange(index, label, e)}
+                                                block
+                                                placeholder="Language"
+                                                defaultValue={language.language_id}
+                                                data={languages}
+                                                disabled={!edit}
+                                            />
+                                        </Col>
+                                        <Col className="mt-2 md:m-0" xs={11} sm={12} md={10}>
+                                            <InputPicker
+                                                onChange={(label, e) => handleProficiencyChange(index, label, e)}
+                                                block
+                                                placeholder="Proficiency"
+                                                defaultValue={language.proficiency}
+                                                data={proficiency}
+                                                disabled={!edit}
+                                            />
+                                        </Col>
+                                        {
+                                            edit &&
+                                            <Col md={4}>
+                                                <IconButton onClick={() => handleDeleteButton(index)} icon={<Icon data-index={index} icon={"minus"} />} />
+                                            </Col>
+                                        }
+                                    </Row>
 
-                            )
-                        })}
+                                )
+                            })}
                     </Row>
-                    <Row className="md:my-2">
-                        <Button type="submit" appearance="primary"> <b>Save</b> </Button>
-                    </Row>
+                    {edit &&
+                        <Row className="md:my-2">
+                            <Button type="submit" appearance="primary"> <b>Save</b> </Button>
+                        </Row>
+                    }
                 </Form>
             </div>
     )

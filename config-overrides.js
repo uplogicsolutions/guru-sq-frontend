@@ -10,6 +10,7 @@ module.exports = override(
       '@input-bg-disabled': '#FFFFFF',
       '@input-color-disabled': '#B38F3A',
       '@input-color': '#B38F3A',
+      '@picker-select-menu-item-selected-disabled-color':'#B38F3A',
     }
   }),
   addPostcssPlugins([

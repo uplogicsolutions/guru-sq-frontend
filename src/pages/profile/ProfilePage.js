@@ -6,18 +6,14 @@ import {
 	Row,
 	Panel,
 } from 'rsuite';
-import { useForm, Controller } from "react-hook-form";
-import { useDispatch, useSelector } from 'react-redux'
-import { getOptions } from 'api/options'
-import { parseArrayOfObject } from 'utils/parse';
-import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
 import EditPersonalDetails from './EditPersonalDetialsModal';
-import EditJobDetails from './EditJobDetails';
 import EditSchoolTeacher from './EditSchoolDetails';
 import EditSubjectDetails from './EditSubjectDetails';
-
+import { FaEdit } from 'react-icons/fa';
 
 const ProfilePage = props => {
+	const [editPersonalDetails, setEditPersonalDetails] = useState(false);
+	const [editSubjects, setEditSubjects] = useState(false);
 
 	return (
 		<BasePage>
@@ -36,8 +32,14 @@ const ProfilePage = props => {
 							<Col>
 								<div id="section-1">
 									<Panel className="custom-card mt-5" bordered>
-										<h4>Personal Details</h4>
-										<EditPersonalDetails />
+										<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+											<h4>Personal Details</h4>
+											<FaEdit
+												onClick={() => setEditPersonalDetails(!editPersonalDetails)}
+												style={{ cursor: 'pointer' }}
+											/>
+										</div>
+										<EditPersonalDetails edit={editPersonalDetails} setEdit={setEditPersonalDetails} />
 									</Panel>
 								</div>
 								<div id="section-2">
@@ -48,8 +50,14 @@ const ProfilePage = props => {
 								</div>
 								<div id="section-3">
 									<Panel className="custom-card mt-5" bordered>
-										<h4>Subjects Details</h4>
-										<EditSubjectDetails />
+										<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+											<h4>Subjects Details</h4>
+											<FaEdit
+												onClick={() => setEditSubjects(!editSubjects)}
+												style={{ cursor: 'pointer' }}
+											/>
+										</div>
+										<EditSubjectDetails edit={editSubjects} setEdit={setEditSubjects} />
 									</Panel>
 								</div>
 							</Col>

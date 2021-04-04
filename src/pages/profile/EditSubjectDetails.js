@@ -1,36 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, Row, Col, Form, Button, TagPicker, Alert, Loader } from 'rsuite';
-import { useDispatch, useSelector } from 'react-redux'
-import { resetRegisterStates, registerSuccess, registerFailure, registerPending } from 'pages/register/store/registerSlice'
-import { registerSubjectDetails } from 'api/auth';
-import { getOptions } from 'api/options'
+import { Row, Col, Form, Button, TagPicker, Loader } from 'rsuite';
+import { getOptions } from 'api/options';
+import { getSubjects, editSubjects } from 'api/user';
 import { parseArrayOfObject } from 'utils/parse';
-
 import { useForm, Controller } from "react-hook-form";
 import Danger from 'components/alerts/Danger';
 
-const EditSubjectDetails = props => {
-
+const EditSubjectDetails = ({ edit, setEdit }) => {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [core_subjects, setCoreSubjects] = useState([])
     const [improvement_subjects, setImprovementSubjects] = useState([])
     const [professional_guidance_subjects, setProfessionalGuidanceSubjects] = useState([])
     const [subjects, setSubjects] = useState([])
-
-    const dispatch = useDispatch()
-    const { loading, redirect, redirectUrl, error } = useSelector(state => state.register)
+    const { control, errors, register, handleSubmit, trigger } = useForm();
 
     const parse = [{ oldKey: 'subject_id', newKey: 'value' }, { oldKey: 'subject_name', newKey: 'label' }]
 
-    const loadOptions = async () => {
-        let subjectsData = await getOptions('subjects')
-        setSubjects(parseArrayOfObject(parse, subjectsData.data.data))
+    const loadData = async () => {
+        let subjectsOptionData = await getOptions('subjects')
+        setSubjects(parseArrayOfObject(parse, subjectsOptionData.data.data))
+        let userSubjectsData = await getSubjects();
+        if (userSubjectsData && userSubjectsData.type == 'success' && userSubjectsData.data) {
+            let temp = [];
+            userSubjectsData.data.core_subjects.map((subject) => temp.push(subject.subject_id));
+            setCoreSubjects(temp);
+            temp = [];
+            userSubjectsData.data.guidance_subjects.map((subject) => temp.push(subject.subject_id));
+            setProfessionalGuidanceSubjects(temp);
+            temp = [];
+            userSubjectsData.data.improvement_subjects.map((subject) => temp.push(subject.subject_id));
+            setImprovementSubjects(temp);
+        }
+        setLoading(false);
     }
-    const { control, errors, register, handleSubmit, trigger } = useForm();
-
 
     useEffect(() => {
-        dispatch(resetRegisterStates())
-        loadOptions()
+        loadData()
     }, [])
 
     const handleOnSubmit = async () => {
@@ -45,19 +51,10 @@ const EditSubjectDetails = props => {
             improvement_subjects: improvementSubjectsData,
             guidance_subjects: guidanceSubjectsData
         }
-
-        console.log(data)
+        await editSubjects(data);
+        setEdit(false);
     }
 
-    if (redirect) {
-        props.history.push(redirectUrl);
-    }
-
-    const temp_subjects = {
-        core_subjects: [1, 2],
-        guidance_subjects: [3],
-        improvement_subjects: [4]
-    }
     return (
         loading
             ?
@@ -71,13 +68,13 @@ const EditSubjectDetails = props => {
                     }
                     <Row className="md:my-2">
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
-                            <p>Which subjects are your core ?</p>
+                            <p>Core Subjects</p>
                         </Col>
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
                             <Controller
                                 name="core_subjects"
                                 control={control}
-                                defaultValue={temp_subjects.core_subjects}
+                                defaultValue={core_subjects}
                                 rules={{ required: true }}
                                 options={subjects}
                                 as={<TagPicker
@@ -85,8 +82,8 @@ const EditSubjectDetails = props => {
                                     tagProps={{
                                         closable: false
                                     }}
-                                    value={temp_subjects.core_subjects}
                                     data={subjects}
+                                    disabled={!edit}
                                     onSelect={(val) => { setCoreSubjects(val) }}
                                     placeholder="Select Core Subjects"
                                 />
@@ -98,13 +95,13 @@ const EditSubjectDetails = props => {
                     </Row>
                     <Row className="md:my-2">
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
-                            <p>Subjects you can improve ?</p>
+                            <p>Subjects you can improve</p>
                         </Col>
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
                             <Controller
                                 name="improvement_subjects"
                                 control={control}
-                                defaultValue={temp_subjects.improvement_subjects}
+                                defaultValue={improvement_subjects}
                                 rules={{ required: true }}
                                 options={subjects}
                                 as={<TagPicker
@@ -112,7 +109,8 @@ const EditSubjectDetails = props => {
                                     tagProps={{
                                         closable: false
                                     }}
-                                    value={temp_subjects.improvement_subjects}
+                                    defaultValue={improvement_subjects}
+                                    disabled={!edit}
                                     data={subjects}
                                     onSelect={(val) => { setImprovementSubjects(val) }}
                                     placeholder="Select Imrpovement Subjects"
@@ -124,13 +122,13 @@ const EditSubjectDetails = props => {
                     </Row>
                     <Row className="md:my-2">
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
-                            <p>Subjects you prefer professional guidance ?</p>
+                            <p>Subjects you prefer professional guidance</p>
                         </Col>
                         <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
                             <Controller
                                 name="guidance_subjects"
                                 control={control}
-                                defaultValue={temp_subjects.guidance_subjects}
+                                defaultValue={professional_guidance_subjects}
                                 rules={{ required: true }}
                                 options={subjects}
                                 as={<TagPicker
@@ -139,20 +137,24 @@ const EditSubjectDetails = props => {
                                         closable: false
                                     }}
                                     data={subjects}
-                                    value={temp_subjects.guidance_subjects}
+                                    defaultValue={professional_guidance_subjects}
+                                    disabled={!edit}
                                     onSelect={(val) => { setProfessionalGuidanceSubjects(val) }}
                                     placeholder="Select Guidance Subjects"
                                 />
                                 }
                             />
-                            
+
                         </Col>
                     </Row>
-                    <Row className="md:my-2">
-                        <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
-                            <Button type="submit" appearance="primary"> <b>Save</b> </Button>
-                        </Col>
-                    </Row>
+                    {
+                        edit &&
+                        <Row className="md:my-2">
+                            <Col className="mt-2 md:m-0" xs={24} sm={24} md={24}>
+                                <Button type="submit" appearance="primary"> <b>Save</b> </Button>
+                            </Col>
+                        </Row>
+                    }
                 </Form>
             </div>
     )
