@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useHistory} from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,11 +25,10 @@ import {
 
 } from "react-icons/fa";
 import ButtonCard from "components/buttonCard/ButtonCard";
-import { useState } from 'react/cjs/react.development';
 import { getAuth } from 'auth/store';
 import socket from '../../socket';
 
-const username = "Jhon";
+const username = "";
 
 
 const Homepage = () => {
@@ -85,11 +84,11 @@ const Homepage = () => {
                 </Row>
                 <Row>
                     <Col xsHidden md={5}>
-                        <Panel bordered header="Summary">
+                        {/* <Panel bordered header="Summary">
                             <Button onClick={() => push('/profile')}>ProfilePage</Button>
                             <Button onClick={() => push('/notifications')}>Notifications</Button>
                             <Button onClick={() => push('/cluster')}>Cluster</Button>
-                        </Panel>
+                        </Panel> */}
                     </Col>
                     <Col xs={24} md={14}>
                         {/* Upper Post Box */}
