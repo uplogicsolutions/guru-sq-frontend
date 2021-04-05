@@ -123,9 +123,11 @@ const JobDetails = (props) => {
 
     const handleSkip = async () => {
        dispatch(setRedirectUrl('/home'));
+       props.history.push('/home');
     }
 
     if (redirect) {
+        dispatch(setRedirectUrl('/home'));
         props.history.push(redirectUrl);
     }
 
