@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './CustomNavbar.module.css';
-import { FaTimes, FaBars } from 'react-icons/fa';
+import { FaTimes, FaBars, FaSignInAlt, FaPowerOff } from 'react-icons/fa';
 import Logo from '../../assets/gurusq.png'
 import { useSelector, useDispatch } from 'react-redux';
 import { getUnreadNotificationsCount } from 'pages/notifications/store';
+import { Icon } from 'rsuite';
 
 const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
   const dispatch = useDispatch()
@@ -40,6 +41,10 @@ const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/cluster">Cluster</NavLink></li>
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/notifications">Alerts</NavLink></li>
         <li><NavLink onClick={() => setClicked(false)} className={`${styles.navLinks}`} to="/profile">My Profile</NavLink></li>
+        <li><NavLink onClick={() => {
+          setClicked(false)
+          localStorage.clear()
+        }} className={`${styles.navLinks}`} to="/landing"><Icon icon="sign-out" /></NavLink></li>
       </ul>
     </nav>
 
