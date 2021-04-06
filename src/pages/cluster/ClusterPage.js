@@ -32,13 +32,11 @@ const Tabs = () => {
         }));
         dispatch(getClusterMessages());
         setInputMessage('')
-        scrollToRef.current?.scrollIntoView({ behavior: "smooth" })
 
     }
 
     socket.on('cluster_messages', (data) => {
         dispatch(handleClusterMessageEvent(data));
-        scrollToRef.current?.scrollIntoView({ behavior: "smooth" })
     })
 
     return (
@@ -77,7 +75,7 @@ const Tabs = () => {
                                         activeClassName="opacity-100 duration-500 translate-x-0"
                                         inactiveClassName="opacity-0 hidden -translate-x-2">
 
-                                        <div className="w-full h-full overflow-y-auto mb-10 flex-col" style={{ flexGrow: 1, flexShrink: 1, flexBasis: 0 }}>
+                                        <div className="w-full h-full overflow-y-auto mb-10 flex flex-col" style={{ flexGrow: 1, flexShrink: 1, flexBasis: 0 }}>
 
                                             {messages.map(message => (
                                                 <div className={`flex px-4 my-2 w-max ${message.sender_id === user_id ? 'self-end' : 'self-start'} items-center bg-green-100 flex-row`}>
