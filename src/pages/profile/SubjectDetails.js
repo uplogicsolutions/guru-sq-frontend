@@ -40,6 +40,7 @@ const EditSubjectDetails = ({ edit, setEdit }) => {
     }, [])
 
     const handleOnSubmit = async () => {
+        setLoading(true)
         const coreSubjectsData = []
         core_subjects.map((subject) => coreSubjectsData.push({ subject_id: subject }))
         const guidanceSubjectsData = []
@@ -53,6 +54,7 @@ const EditSubjectDetails = ({ edit, setEdit }) => {
         }
         await editSubjects(data);
         setEdit(false);
+        setLoading(false)
     }
 
     return (

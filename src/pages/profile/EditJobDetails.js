@@ -21,6 +21,7 @@ import { parseArrayOfObject } from 'utils/parse';
 
 import { useForm, Controller } from "react-hook-form";
 import Danger from 'components/alerts/Danger';
+import { setLoading } from 'auth/store';
 
 
 const EditJobDetails = (props) => {
@@ -104,6 +105,7 @@ const EditJobDetails = (props) => {
     }
 
     const handleOnSubmit = async data => {
+        setLoading(true)
         let reqData = {
             jobs: jobs,
             selected_age_groups: ageGroups,
@@ -119,6 +121,7 @@ const EditJobDetails = (props) => {
         // } else {
         //     dispatch(registerFailure(response.message))
         // }
+        setLoading(false)
     }
 
     if (redirect) {

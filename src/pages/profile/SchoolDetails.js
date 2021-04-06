@@ -42,12 +42,15 @@ const EditSchoolTeacher = ({ edit, setEdit }) => {
     }, [])
 
     const handleOnSubmit = async (form_data) => {
+        setLoading(true);
         let data = {
             ...form_data,
             teacher_type
         }
         await editSchoolDetails(data);
         setEdit(false);
+        setLoading(false);
+
     }
 
     return (

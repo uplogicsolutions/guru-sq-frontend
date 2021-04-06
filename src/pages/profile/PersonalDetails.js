@@ -61,11 +61,13 @@ const EditPersonalDetails = ({edit, setEdit}) => {
     }
 
     const handleOnSubmit = async (data) => {
+        setLoading(true);
         await editPersonalDetails({
             ...data,
             secondary_languages: otherLanguagesFields
         });
         setEdit(false);
+        setLoading(false);
     }
     const handleDeleteButton = (index) => {
         let values = [...otherLanguagesFields];
@@ -76,7 +78,7 @@ const EditPersonalDetails = ({edit, setEdit}) => {
     return (
         loading
             ?
-            <Loader size='md' center={true} />
+            <Loader backdrop size='md' center={true} />
             :
             <div className="p-0">
                 <Form onSubmit={handleSubmit(handleOnSubmit)}>
